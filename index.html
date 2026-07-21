@@ -303,6 +303,74 @@
         }
 
         /* ======================================================
+           AZIONE
+        ====================================================== */
+
+        .actions {
+            margin-top: 30px;
+        }
+
+        .municipality-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 10px;
+
+            min-height: 48px;
+
+            padding: 12px 22px;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.36);
+
+            border-radius: 12px;
+
+            background: #ffffff;
+
+            color: #17492d;
+
+            box-shadow:
+                0 10px 24px rgba(0, 0, 0, 0.18);
+
+            font-size: 0.82rem;
+            font-weight: 800;
+
+            letter-spacing: 0.08em;
+
+            text-decoration: none;
+
+            transition:
+                transform 0.18s ease,
+                background-color 0.18s ease,
+                box-shadow 0.18s ease;
+        }
+
+        .municipality-link:hover {
+            background: #edf6ef;
+
+            box-shadow:
+                0 14px 28px rgba(0, 0, 0, 0.23);
+
+            transform: translateY(-2px);
+        }
+
+        .municipality-link:active {
+            transform: translateY(0);
+        }
+
+        .municipality-link:focus-visible {
+            outline:
+                3px solid rgba(255, 255, 255, 0.48);
+
+            outline-offset: 4px;
+        }
+
+        .municipality-link-arrow {
+            font-size: 1rem;
+        }
+
+        /* ======================================================
            FOOTER
         ====================================================== */
 
@@ -348,6 +416,27 @@
             .presentation-date {
                 font-size: 1.18rem;
             }
+
+            .municipality-link {
+                width: 100%;
+
+                padding:
+                    12px 16px;
+
+                font-size:
+                    0.76rem;
+            }
+        }
+
+        /* ======================================================
+           RIDUZIONE DELLE ANIMAZIONI
+        ====================================================== */
+
+        @media (prefers-reduced-motion: reduce) {
+
+            .municipality-link {
+                transition: none;
+            }
         }
 
     </style>
@@ -389,6 +478,7 @@
             class="status"
             aria-label="Stato della piattaforma"
         >
+
             <span
                 class="status-dot"
                 aria-hidden="true"
@@ -397,6 +487,7 @@
             <span>
                 Aggiornamento in corso
             </span>
+
         </div>
 
         <section class="presentation">
@@ -424,6 +515,31 @@
             </p>
 
         </section>
+
+        <div class="actions">
+
+            <a
+                class="municipality-link"
+                href="https://comune.pescopennataro.is.it/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Apri il sito istituzionale del Comune di Pescopennataro in una nuova scheda"
+            >
+
+                <span
+                    class="municipality-link-arrow"
+                    aria-hidden="true"
+                >
+                    ←
+                </span>
+
+                <span>
+                    TORNA AL SITO DEL COMUNE
+                </span>
+
+            </a>
+
+        </div>
 
         <footer>
             © 2026 — Atlante Micologico di Pescopennataro

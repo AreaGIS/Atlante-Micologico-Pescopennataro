@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+
+<html lang="it">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Atlante Micologico di Pescopennataro - WebGIS in fase di completamento"
+    >
+
+    <title>
+        Atlante Micologico di Pescopennataro
+    </title>
+
+    <style>
+
+        /* ======================================================
+           IMPOSTAZIONI GENERALI
+        ====================================================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            min-height: 100vh;
+            min-height: 100dvh;
+
+            padding: 24px;
+
+            background:
+                radial-gradient(
+                    circle at top,
+                    rgba(102, 156, 116, 0.32),
+                    transparent 45%
+                ),
+                linear-gradient(
+                    145deg,
+                    #173d2b 0%,
+                    #23573c 52%,
+                    #102b1e 100%
+                );
+
+            color: #ffffff;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+        }
+
+        /* ======================================================
+           PANNELLO PRINCIPALE
+        ====================================================== */
+
+        .page {
+            width: min(820px, 100%);
+
+            padding: 48px 48px 42px;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.25);
+
+            border-radius: 24px;
+
+            background:
+                rgba(16, 48, 32, 0.82);
+
+            box-shadow:
+                0 30px 80px rgba(0, 0, 0, 0.34);
+
+            text-align: center;
+
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        /* ======================================================
+           ELEMENTO DECORATIVO
+        ====================================================== */
+
+        .symbol {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            width: 74px;
+            height: 74px;
+
+            margin-bottom: 22px;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.34);
+
+            border-radius: 50%;
+
+            background:
+                rgba(255, 255, 255, 0.1);
+
+            font-size: 36px;
+
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.18);
+        }
+
+        /* ======================================================
+           TESTI
+        ====================================================== */
+
+        .kicker {
+            margin: 0 0 10px;
+
+            color: #cfe9d6;
+
+            font-size: 0.78rem;
+            font-weight: 700;
+
+            letter-spacing: 0.18em;
+
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0;
+
+            font-family:
+                Georgia,
+                "Times New Roman",
+                serif;
+
+            font-size:
+                clamp(2.1rem, 6vw, 4rem);
+
+            line-height: 1.05;
+        }
+
+        .webgis-label {
+            display: inline-block;
+
+            margin-top: 16px;
+            padding: 8px 18px;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.28);
+
+            border-radius: 999px;
+
+            background:
+                rgba(255, 255, 255, 0.09);
+
+            color: #e6f3e9;
+
+            font-size: 0.82rem;
+            font-weight: 800;
+
+            letter-spacing: 0.15em;
+        }
+
+        .message {
+            max-width: 650px;
+
+            margin:
+                28px auto 0;
+
+            color:
+                rgba(255, 255, 255, 0.88);
+
+            font-size:
+                1.08rem;
+
+            line-height:
+                1.7;
+        }
+
+        /* ======================================================
+           STATO DEL PROGETTO
+        ====================================================== */
+
+        .status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 10px;
+
+            margin-top: 28px;
+
+            color: #dceee1;
+
+            font-size: 0.92rem;
+            font-weight: 700;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+
+            border-radius: 50%;
+
+            background: #9ad3a8;
+
+            box-shadow:
+                0 0 0 6px rgba(154, 211, 168, 0.13);
+        }
+
+        /* ======================================================
+           DATA DI PRESENTAZIONE
+        ====================================================== */
+
+        .presentation {
+            margin-top: 28px;
+            padding: 18px 20px;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.18);
+
+            border-radius: 14px;
+
+            background:
+                rgba(255, 255, 255, 0.07);
+        }
+
+        .presentation-label {
+            display: block;
+
+            color: #cfe9d6;
+
+            font-size: 0.72rem;
+            font-weight: 700;
+
+            letter-spacing: 0.13em;
+
+            text-transform: uppercase;
+        }
+
+        .presentation-date {
+            display: block;
+
+            margin-top: 6px;
+
+            font-family:
+                Georgia,
+                "Times New Roman",
+                serif;
+
+            font-size: 1.35rem;
+            font-weight: 700;
+        }
+
+        /* ======================================================
+           ENTI
+        ====================================================== */
+
+        .institutions {
+            margin-top: 32px;
+            padding-top: 24px;
+
+            border-top:
+                1px solid rgba(255, 255, 255, 0.16);
+        }
+
+        .institutions-title {
+            margin: 0 0 12px;
+
+            color: #bcd9c4;
+
+            font-size: 0.7rem;
+            font-weight: 700;
+
+            letter-spacing: 0.15em;
+
+            text-transform: uppercase;
+        }
+
+        .institutions-list {
+            margin: 0;
+
+            color:
+                rgba(255, 255, 255, 0.84);
+
+            font-size: 0.9rem;
+
+            line-height: 1.7;
+        }
+
+        /* ======================================================
+           FOOTER
+        ====================================================== */
+
+        footer {
+            margin-top: 26px;
+
+            color:
+                rgba(255, 255, 255, 0.58);
+
+            font-size: 0.75rem;
+
+            line-height: 1.5;
+        }
+
+        /* ======================================================
+           RESPONSIVE
+        ====================================================== */
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 12px;
+            }
+
+            .page {
+                padding:
+                    36px 20px 30px;
+
+                border-radius: 18px;
+            }
+
+            .symbol {
+                width: 62px;
+                height: 62px;
+
+                font-size: 30px;
+            }
+
+            .message {
+                font-size: 0.98rem;
+            }
+
+            .presentation-date {
+                font-size: 1.18rem;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <main class="page">
+
+        <div
+            class="symbol"
+            aria-hidden="true"
+        >
+            🍄
+        </div>
+
+        <p class="kicker">
+            Comune di Pescopennataro
+        </p>
+
+        <h1>
+            Atlante Micologico<br>
+            di Pescopennataro
+        </h1>
+
+        <div class="webgis-label">
+            WEBGIS
+        </div>
+
+        <p class="message">
+            La piattaforma è attualmente in fase di completamento.
+            Il WebGIS sarà reso disponibile su questo stesso
+            collegamento al termine delle attività di sviluppo,
+            verifica e validazione.
+        </p>
+
+        <div
+            class="status"
+            aria-label="Stato della piattaforma"
+        >
+            <span
+                class="status-dot"
+                aria-hidden="true"
+            ></span>
+
+            <span>
+                Aggiornamento in corso
+            </span>
+        </div>
+
+        <section class="presentation">
+
+            <span class="presentation-label">
+                Presentazione ufficiale della piattaforma
+            </span>
+
+            <span class="presentation-date">
+                26 luglio 2026
+            </span>
+
+        </section>
+
+        <section class="institutions">
+
+            <p class="institutions-title">
+                Progetto realizzato con la collaborazione di
+            </p>
+
+            <p class="institutions-list">
+                Comune di Pescopennataro<br>
+                Università degli Studi del Molise<br>
+                PescoLab
+            </p>
+
+        </section>
+
+        <footer>
+            © 2026 — Atlante Micologico di Pescopennataro
+        </footer>
+
+    </main>
+
+</body>
+
+</html>

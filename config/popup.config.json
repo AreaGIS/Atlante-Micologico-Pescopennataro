@@ -1,0 +1,14 @@
+{
+  "version": "6.2",
+  "titleField": "Specie",
+  "photoField": "Foto",
+  "remotePhotoField": "URLFoto",
+  "publicFields": [
+    "Commestibilita",
+    "Habitat",
+    "Altitudine",
+    "Longitudine",
+    "Latitudine"
+  ],
+  "scientificFields": []
+}

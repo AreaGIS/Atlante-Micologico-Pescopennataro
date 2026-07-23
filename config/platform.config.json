@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0.0",
+
+  "platform": {
+    "id": "webgis-platform",
+    "name": "WebGIS Platform",
+    "version": "0.1.0",
+    "status": "development",
+
+    "description": {
+      "it": "Piattaforma modulare per applicazioni WebGIS.",
+      "en": "Modular platform for WebGIS applications."
+    }
+  },
+
+  "application": {
+    "defaultProjectId": "atlas-pescopennataro",
+
+    "defaultLanguage": "it",
+
+    "debug": true,
+
+    "validateConfiguration": true,
+
+    "allowExperimentalModules": false
+  },
+
+  "map": {
+    "adapter": "openlayers",
+
+    "fallbackAdapter": null
+  },
+
+  "analytics": {
+    "defaultProvider": "cloudflare",
+
+    "allowDisable": true
+  },
+
+  "logging": {
+    "level": "debug"
+  }
+}

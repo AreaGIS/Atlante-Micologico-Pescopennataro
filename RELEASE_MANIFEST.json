@@ -1,0 +1,15 @@
+{
+  "features": 46,
+  "photo_files": 76,
+  "release_type": "minima pubblicabile",
+  "excluded": [
+    ".git",
+    "WORKSPACE_ATLANTE",
+    "backup",
+    "docs",
+    "engine",
+    "projects",
+    "ARCHIVIO",
+    "file OLD"
+  ]
+}

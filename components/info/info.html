@@ -1,0 +1,426 @@
+<!-- ==========================================================
+     WEBGIS V6
+     COMPONENTE : INFO
+     VERSIONE   : 1.2
+     RELEASE    : 0.3
+     STATO      : IN TEST
+========================================================== -->
+
+<div
+    id="info-overlay"
+    class="info-overlay"
+    aria-hidden="true"
+>
+
+    <section
+        id="info-modal"
+        class="info-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="info-title"
+        aria-describedby="info-subtitle"
+        tabindex="-1"
+    >
+
+        <button
+            id="btn-close-info"
+            class="info-close-button"
+            type="button"
+            aria-label="Chiudi la finestra Informazioni"
+            title="Chiudi"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+        <div class="info-page">
+
+            <!-- ==================================================
+                 INTESTAZIONE
+            =================================================== -->
+
+            <header class="info-hero">
+
+                <div
+                    class="info-logo-row"
+                    aria-label="Enti e organizzazioni del progetto"
+                >
+
+                    <a
+                        class="info-logo-link"
+                        href="https://comune.pescopennataro.is.it/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Apri il sito ufficiale del Comune di Pescopennataro"
+                        aria-label="Apri il sito ufficiale del Comune di Pescopennataro"
+                    >
+                        <img
+                            class="info-institutional-logo info-logo-comune"
+                            src="./loghi/Comune.png"
+                            alt="Comune di Pescopennataro"
+                        >
+                    </a>
+
+                    <a
+                        class="info-logo-link"
+                        href="https://www.unimol.it/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Apri il sito ufficiale dell'Università degli Studi del Molise"
+                        aria-label="Apri il sito ufficiale dell'Università degli Studi del Molise"
+                    >
+                        <img
+                            class="info-institutional-logo info-logo-unimol"
+                            src="./loghi/UNIMOL.png"
+                            alt="Università degli Studi del Molise"
+                        >
+                    </a>
+
+                    <div
+                        class="info-logo-link info-logo-link-static"
+                        aria-label="PescoLab"
+                    >
+                        <img
+                            class="info-institutional-logo info-logo-pescolab"
+                            src="./loghi/PescoLab.png"
+                            alt="PescoLab"
+                        >
+                    </div>
+
+                </div>
+
+                <p class="info-kicker">
+                    Progetto istituzionale e scientifico
+                </p>
+
+                <h2
+                    id="info-title"
+                    class="info-title"
+                >
+                    Atlante Micologico di Pescopennataro
+                </h2>
+
+                <p
+                    id="info-subtitle"
+                    class="info-subtitle"
+                >
+                    Sistema Web GIS per la raccolta, la gestione, la
+                    consultazione e la valorizzazione del patrimonio
+                    micologico del territorio comunale.
+                </p>
+
+            </header>
+
+            <!-- ==================================================
+                 PRESENTAZIONE
+            =================================================== -->
+
+            <section class="info-section">
+
+                <h3>
+                    Presentazione
+                </h3>
+
+                <p>
+                    L'Atlante Micologico di Pescopennataro integra dati
+                    geografici, documentazione fotografica e informazioni
+                    di consultazione, costituendo uno strumento di supporto
+                    alla ricerca, alla divulgazione e alla conoscenza del
+                    patrimonio naturale locale.
+                </p>
+
+            </section>
+
+            <!-- ==================================================
+                 COLLABORAZIONE ISTITUZIONALE
+            =================================================== -->
+
+            <section class="info-section">
+
+                <h3>
+                    Progetto realizzato nell'ambito della collaborazione tra
+                </h3>
+
+                <div class="info-roles">
+
+                    <div class="info-role-card">
+
+                        <strong>
+                            Ente territoriale
+                        </strong>
+
+                        <span>
+                            Comune di Pescopennataro
+                        </span>
+
+                    </div>
+
+                    <div class="info-role-card">
+
+                        <strong>
+                            Ente universitario
+                        </strong>
+
+                        <span>
+                            Università degli Studi del Molise
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- ==================================================
+                 DIREZIONE SCIENTIFICA
+            =================================================== -->
+
+            <section class="info-section info-section-scientific">
+
+                <h3>
+                    Direzione scientifica della ricerca
+                </h3>
+
+                <div
+                    class="
+                        info-institution-card
+                        info-institution-card-scientific
+                    "
+                >
+
+                    <div class="info-person-list">
+
+                        <div class="info-person-name">
+                            Prof. Corrado Ievoli
+                        </div>
+
+                        <div class="info-person-name">
+                            Prof. Giuseppe Lima
+                        </div>
+
+                    </div>
+
+                    <div class="info-department-layout">
+
+                        <a
+                            class="info-department-logo-link"
+                            href="https://www3.unimol.it/dipartimenti/agricoltura-ambiente-e-alimenti/home"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title="Apri il sito del Dipartimento Agricoltura, Ambiente e Alimenti"
+                            aria-label="Apri il sito del Dipartimento Agricoltura, Ambiente e Alimenti"
+                        >
+                            <img
+                                class="info-department-logo"
+                                src="./loghi/logo_dipartimento_agricoltura.svg"
+                                alt="Simbolo del Dipartimento Agricoltura, Ambiente e Alimenti"
+                            >
+                        </a>
+
+                        <div class="info-department-text">
+
+                            <strong>
+                                Dipartimento Agricoltura, Ambiente e Alimenti
+                            </strong>
+
+                            <p class="info-university-name">
+                                Università degli Studi del Molise
+                            </p>
+
+                            <a
+                                class="info-department-link"
+                                href="https://www3.unimol.it/dipartimenti/agricoltura-ambiente-e-alimenti/home"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Visita il sito del Dipartimento
+                                <span aria-hidden="true">↗</span>
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- ==================================================
+                 IDEAZIONE E SVILUPPO
+            =================================================== -->
+
+            <section class="info-section info-section-author">
+
+                <h3>
+                    Ideazione, progettazione e sviluppo del Web GIS
+                </h3>
+
+                <div
+                    class="
+                        info-institution-card
+                        info-institution-card-author
+                    "
+                >
+
+                    <div class="info-person-list">
+
+                        <div class="info-person-name">
+                            Dott. Giuseppe Pistacchio
+                        </div>
+
+                    </div>
+
+                    <div class="info-department-layout">
+
+                        <a
+                            class="info-department-logo-link"
+                            href="https://www3.unimol.it/dipartimenti/economia/home"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title="Apri il sito del Dipartimento di Economia"
+                            aria-label="Apri il sito del Dipartimento di Economia"
+                        >
+                            <img
+                                class="info-department-logo"
+                                src="./loghi/logo_dipartimento_economia.svg"
+                                alt="Simbolo del Dipartimento di Economia"
+                            >
+                        </a>
+
+                        <div class="info-department-text">
+
+                            <strong>
+                                Dipartimento di Economia
+                            </strong>
+
+                            <p class="info-university-name">
+                                Università degli Studi del Molise
+                            </p>
+
+                            <p>
+                                Ideazione, progettazione e sviluppo del Web GIS
+                                e dell'Atlante Micologico di Pescopennataro.
+                            </p>
+
+                            <a
+                                class="info-department-link"
+                                href="https://www3.unimol.it/dipartimenti/economia/home"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Visita il sito del Dipartimento
+                                <span aria-hidden="true">↗</span>
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- ==================================================
+                 FONTE DATI
+            =================================================== -->
+
+            <section class="info-section">
+
+                <h3>
+                    Fonte dati cartografici degli habitat
+                </h3>
+
+                <div class="info-source-note">
+
+                    <p>
+                        La base informativa relativa agli habitat deriva dal
+                        Sistema <strong>Carta della Natura</strong> di ISPRA.
+                        I dati sono stati forniti da ISPRA con licenza di
+                        attribuzione <strong>CC BY 4.0</strong> e
+                        successivamente rielaborati dal
+                        <strong>Dott. Giuseppe Pistacchio</strong> per il
+                        territorio del Comune di Pescopennataro.
+                    </p>
+
+                </div>
+
+            </section>
+
+            <!-- ==================================================
+                 TECNOLOGIE
+            =================================================== -->
+
+            <section class="info-section">
+
+                <h3>
+                    Tecnologie adottate
+                </h3>
+
+                <div
+                    class="info-tech-list"
+                    aria-label="Tecnologie adottate"
+                >
+                    <span>Locus Map</span>
+                    <span>QGIS</span>
+                    <span>Python</span>
+                    <span>Leaflet</span>
+                    <span>GeoJSON</span>
+                    <span>GitHub Pages</span>
+                    <span>Vector Tiles in sviluppo</span>
+                </div>
+
+            </section>
+
+            <!-- ==================================================
+                 RINGRAZIAMENTI
+            =================================================== -->
+
+            <section class="info-section">
+
+                <h3>
+                    Ringraziamenti
+                </h3>
+
+                <p>
+                    Si ringraziano tutti coloro che contribuiscono alle
+                    attività di rilievo, catalogazione e validazione
+                    scientifica dei dati, favorendo la realizzazione
+                    dell'Atlante Micologico di Pescopennataro.
+                </p>
+
+            </section>
+
+            <!-- ==================================================
+                 VERSIONE
+            =================================================== -->
+
+            <section class="info-section">
+
+                <h3>
+                    Versione
+                </h3>
+
+                <div class="info-version-box">
+
+                    <p>
+                        <strong>
+                            Web GIS - Atlante Micologico di Pescopennataro
+                        </strong>
+
+                        <br>
+
+                        Versione 4.5.7 - Ultimo aggiornamento: 13/07/2026
+
+                        <br>
+
+                        &copy; 2026
+                    </p>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </section>
+
+</div>

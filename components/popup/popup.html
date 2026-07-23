@@ -1,0 +1,34 @@
+<!-- ==========================================================
+     WEBGIS V6
+     COMPONENTE : SURVEY CARD
+     VERSIONE   : 6.0
+     STATO      : IN TEST
+========================================================== -->
+<article
+    id="survey-popup"
+    class="survey-popup"
+    role="dialog"
+    aria-modal="false"
+    aria-labelledby="survey-popup-title"
+    aria-hidden="true"
+    hidden
+>
+    <header class="survey-popup-header">
+        <div class="survey-popup-heading">
+            <p class="survey-popup-kicker">Atlante Micologico</p>
+            <h2 id="survey-popup-title" class="survey-popup-title">Rilievo micologico</h2>
+            <p id="survey-popup-subtitle" class="survey-popup-subtitle"></p>
+        </div>
+        <button
+            id="survey-popup-close"
+            class="survey-popup-close"
+            type="button"
+            aria-label="Chiudi la scheda"
+            title="Chiudi"
+        >×</button>
+    </header>
+
+    <div id="survey-popup-content" class="survey-popup-content">
+        <p class="survey-popup-empty">Seleziona un rilievo sulla mappa.</p>
+    </div>
+</article>

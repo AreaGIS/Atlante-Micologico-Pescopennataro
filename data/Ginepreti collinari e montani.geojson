@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "Ginepreti collinari e montani",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "fid": 5, "OBJECTID": 2200, "CODICE": "31.88_m", "Shape_Leng": 523.43418301600002, "Shape_Area": 16756.319783300001, "ettari": 1.67563197833, "nomeclasse": "Ginepreti collinari e montani", "classe_ve": "Alta", "classe_se": "Alta", "classe_pa": "Bassa", "classe_fg": "Media" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 14.278635675555954, 41.878311343774023 ], [ 14.278735486248447, 41.878415324793728 ], [ 14.278675530668108, 41.87827649829584 ], [ 14.278506717644243, 41.878126639520396 ], [ 14.278461628861699, 41.87813821495881 ], [ 14.278635675555954, 41.878311343774023 ] ] ] ] } }
+]
+}

@@ -1,0 +1,1338 @@
+<!-- ==========================================================
+     WEBGIS V6
+     COMPONENTE : MAP
+     VERSIONE   : 2.8
+     RELEASE    : 1.8
+     STATO      : IN TEST
+========================================================== -->
+
+<section
+    id="map-application"
+    class="map-application"
+    aria-label="WebGIS dell’Atlante Micologico di Pescopennataro"
+>
+
+    <!-- ======================================================
+         PANNELLO DI CONTROLLO
+    ======================================================= -->
+
+    <aside
+        id="map-sidebar"
+        class="map-sidebar"
+        aria-label="Pannello di controllo della mappa"
+    >
+
+        <header class="map-sidebar-header">
+
+            <div class="map-sidebar-heading">
+
+                <p class="map-sidebar-kicker">
+                    Atlante Micologico
+                </p>
+
+                <h1 class="map-sidebar-title">
+                    Pescopennataro
+                </h1>
+
+            </div>
+
+            <div class="map-sidebar-header-actions">
+
+                <button
+                    id="map-info-button"
+                    class="map-info-button"
+                    type="button"
+                    aria-label="Apri le informazioni sull’Atlante Micologico"
+                    title="Informazioni sull’Atlante"
+                >
+                    <span aria-hidden="true">i</span>
+                </button>
+
+                <button
+                    id="map-sidebar-toggle"
+                    class="map-sidebar-toggle"
+                    type="button"
+                    aria-label="Riduci il pannello di controllo"
+                    aria-expanded="true"
+                    title="Riduci il pannello"
+                >
+                    <span aria-hidden="true">‹</span>
+                </button>
+
+            </div>
+
+        </header>
+
+        <div class="map-sidebar-content">
+
+            <!-- ==================================================
+                 CARTOGRAFIA DI BASE
+            =================================================== -->
+
+            <section
+                class="map-control-section"
+                aria-labelledby="map-basemap-title"
+            >
+
+                <header class="map-control-section-header">
+
+                    <div>
+
+                        <h2
+                            id="map-basemap-title"
+                            class="map-control-section-title"
+                        >
+                            Cartografia
+                        </h2>
+
+                        <p class="map-control-section-description">
+                            Seleziona la rappresentazione del territorio.
+                        </p>
+
+                    </div>
+
+                </header>
+
+                <div
+                    class="map-basemap-options"
+                    role="radiogroup"
+                    aria-labelledby="map-basemap-title"
+                >
+
+                    <label
+                        class="map-basemap-option map-basemap-option-active"
+                        for="basemap-satellite"
+                    >
+
+                        <input
+                            id="basemap-satellite"
+                            class="map-basemap-input"
+                            type="radio"
+                            name="basemap"
+                            value="satellite"
+                            checked
+                        >
+
+                        <span
+                            class="map-basemap-icon"
+                            aria-hidden="true"
+                        >
+                            🛰
+                        </span>
+
+                        <span class="map-basemap-label">
+
+                            <strong>Satellite</strong>
+
+                            <small>
+                                MapTiler, con fallback automatico Esri
+                            </small>
+
+                        </span>
+
+                    </label>
+
+                    <label
+                        class="map-basemap-option"
+                        for="basemap-osm"
+                    >
+
+                        <input
+                            id="basemap-osm"
+                            class="map-basemap-input"
+                            type="radio"
+                            name="basemap"
+                            value="osm"
+                        >
+
+                        <span
+                            class="map-basemap-icon"
+                            aria-hidden="true"
+                        >
+                            🗺
+                        </span>
+
+                        <span class="map-basemap-label">
+
+                            <strong>OpenStreetMap</strong>
+
+                            <small>
+                                Strade, edifici e toponimi
+                            </small>
+
+                        </span>
+
+                    </label>
+
+                    <label
+                        class="map-basemap-option"
+                        for="basemap-3d"
+                    >
+
+                        <input
+                            id="basemap-3d"
+                            class="map-basemap-input"
+                            type="radio"
+                            name="basemap"
+                            value="3d"
+                        >
+
+                        <span
+                            class="map-basemap-icon"
+                            aria-hidden="true"
+                        >
+                            🌍
+                        </span>
+
+                        <span class="map-basemap-label">
+
+                            <strong>Satellite 3D</strong>
+
+                            <small>
+                                Terreno tridimensionale MapTiler
+                            </small>
+
+                        </span>
+
+                    </label>
+
+                </div>
+
+            </section>
+
+            <!-- ==================================================
+                 FILTRO PER SPECIE
+            =================================================== -->
+
+            <section
+                class="map-control-section map-species-section"
+                aria-labelledby="map-species-title"
+            >
+
+                <header class="map-control-section-header">
+
+                    <div>
+
+                        <h2
+                            id="map-species-title"
+                            class="map-control-section-title"
+                        >
+                            Specie
+                        </h2>
+
+                        <p class="map-control-section-description">
+                            Cerca e visualizza i rilievi associati a una specie.
+                        </p>
+
+                    </div>
+
+                </header>
+
+                <div class="map-species-filter">
+
+                    <label
+                        class="map-species-select-label"
+                        for="map-species-select"
+                    >
+                        <span class="map-visually-hidden">Seleziona una specie</span>
+
+                        <select
+                            id="map-species-select"
+                            class="map-species-select"
+                            aria-describedby="map-species-summary map-species-help"
+                        >
+                            <option value="">Tutte le specie</option>
+                        </select>
+                    </label>
+
+                    <div class="map-species-actions">
+
+                        <button
+                            id="map-species-zoom"
+                            class="map-species-action map-species-action-primary"
+                            type="button"
+                            disabled
+                        >
+                            Zoom risultati
+                        </button>
+
+                        <button
+                            id="map-species-reset"
+                            class="map-species-action"
+                            type="button"
+                            disabled
+                        >
+                            Annulla selezione
+                        </button>
+
+                        <button
+                            id="map-species-show-all"
+                            class="map-species-action"
+                            type="button"
+                            disabled
+                        >
+                            Mostra tutti
+                        </button>
+
+                        <button
+                            id="map-species-gallery"
+                            class="map-species-action map-species-action-gallery"
+                            type="button"
+                            disabled
+                        >
+                            Galleria della specie
+                        </button>
+
+                    </div>
+
+                    <p
+                        id="map-species-summary"
+                        class="map-species-summary"
+                        aria-live="polite"
+                    >
+                        Caricamento dei rilievi…
+                    </p>
+
+                    <p
+                        id="map-species-help"
+                        class="map-species-help"
+                    >
+                        Seleziona una specie: la mappa mostra solo i rilievi associati e li inquadra automaticamente.
+                    </p>
+
+                </div>
+
+            </section>
+
+            <!-- ==================================================
+                 LAYER PRINCIPALI
+            =================================================== -->
+
+            <section
+                class="map-control-section"
+                aria-labelledby="map-primary-layers-title"
+            >
+
+                <header class="map-control-section-header">
+
+                    <div>
+
+                        <h2
+                            id="map-primary-layers-title"
+                            class="map-control-section-title"
+                        >
+                            Informazioni territoriali
+                        </h2>
+
+                        <p class="map-control-section-description">
+                            Attiva i layer o raggiungine l’estensione.
+                        </p>
+
+                    </div>
+
+                </header>
+
+                <div class="map-layer-options">
+
+                    <div class="map-layer-row">
+
+                        <label
+                            class="map-layer-option"
+                            for="layer-boundary"
+                        >
+
+                            <input
+                                id="layer-boundary"
+                                class="map-layer-input"
+                                type="checkbox"
+                                data-layer-id="boundary"
+                                checked
+                            >
+
+                            <span
+                                class="map-layer-symbol map-layer-symbol-boundary"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="map-layer-label">
+                                Limite amministrativo
+                            </span>
+
+                        </label>
+
+                        <button
+                            class="map-layer-zoom"
+                            type="button"
+                            data-zoom-layer-id="boundary"
+                            aria-label="Zoom sul limite amministrativo"
+                            title="Zoom sul limite amministrativo"
+                        >
+                            <span class="map-layer-zoom-icon" aria-hidden="true"></span>
+                        </button>
+
+                    </div>
+
+                    <div class="map-layer-row">
+
+                        <label
+                            class="map-layer-option"
+                            for="layer-surveys"
+                        >
+
+                            <input
+                                id="layer-surveys"
+                                class="map-layer-input"
+                                type="checkbox"
+                                data-layer-id="surveys"
+                                checked
+                            >
+
+                            <span
+                                class="map-layer-symbol map-layer-symbol-surveys"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="map-layer-label">
+                                Rilievi micologici
+                            </span>
+
+                        </label>
+
+                        <button
+                            class="map-layer-zoom"
+                            type="button"
+                            data-zoom-layer-id="surveys"
+                            aria-label="Zoom sui rilievi micologici"
+                            title="Zoom sui rilievi micologici"
+                        >
+                            <span class="map-layer-zoom-icon" aria-hidden="true"></span>
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- ==================================================
+                 HABITAT
+            =================================================== -->
+
+            <section
+                class="map-control-section map-habitat-section"
+                aria-labelledby="map-habitat-title"
+            >
+
+                <header class="map-control-section-header">
+
+                    <div>
+
+                        <h2
+                            id="map-habitat-title"
+                            class="map-control-section-title"
+                        >
+                            Habitat
+                        </h2>
+
+                        <p class="map-control-section-description">
+                            Ordinati per superficie decrescente; centri abitati e siti produttivi in fondo.
+                        </p>
+
+                    </div>
+
+                    <button
+                        id="map-habitat-toggle"
+                        class="map-section-toggle"
+                        type="button"
+                        aria-label="Mostra o nascondi l’elenco degli habitat"
+                        aria-expanded="true"
+                    >
+                        <span aria-hidden="true">−</span>
+                    </button>
+
+                </header>
+
+                <div
+                    class="map-habitat-bulk-actions"
+                    role="group"
+                    aria-label="Azioni rapide sugli habitat"
+                >
+
+                    <button
+                        id="map-habitat-select-all"
+                        class="map-habitat-bulk-action map-habitat-bulk-action-primary"
+                        type="button"
+                    >
+                        <span class="map-habitat-bulk-icon" aria-hidden="true">✓</span>
+                        <span>Seleziona tutti</span>
+                    </button>
+
+                    <button
+                        id="map-habitat-clear-all"
+                        class="map-habitat-bulk-action"
+                        type="button"
+                        disabled
+                    >
+                        <span class="map-habitat-bulk-icon" aria-hidden="true">×</span>
+                        <span>Deseleziona tutti</span>
+                    </button>
+
+                </div>
+
+                <p
+                    id="map-habitat-selection-summary"
+                    class="map-habitat-selection-summary"
+                    aria-live="polite"
+                >
+                    Nessun habitat selezionato.
+                </p>
+
+                <div
+                    id="map-habitat-list"
+                    class="map-habitat-list"
+                >
+
+                    <!-- FAGGETE -->
+
+                    <div class="map-layer-row">
+
+                        <label class="map-layer-option">
+
+                            <input
+                                class="map-layer-input"
+                                type="checkbox"
+                                data-layer-id="habitat-faggete"
+                            >
+
+                            <span
+                                class="map-layer-symbol"
+                                data-habitat-color="faggete"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="map-layer-label">
+                                Faggete dell’Italia meridionale
+                            </span>
+
+                        </label>
+
+                        <button
+                            class="map-layer-zoom"
+                            type="button"
+                            data-zoom-layer-id="habitat-faggete"
+                            aria-label="Zoom sulle faggete"
+                            title="Zoom sul layer"
+                        >
+                            <span class="map-layer-zoom-icon" aria-hidden="true"></span>
+                        </button>
+
+                    </div>
+
+                    <!-- PRATERIE MESICHE -->
+
+                    <div class="map-layer-row">
+
+                        <label class="map-layer-option">
+
+                            <input
+                                class="map-layer-input"
+                                type="checkbox"
+                                data-layer-id="habitat-praterie-mesiche"
+                            >
+
+                            <span
+                                class="map-layer-symbol"
+                                data-habitat-color="praterie-mesiche"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="map-layer-label">
+                                Praterie mesiche temperate e supramediterranee
+                            </span>
+
+                        </label>
+
+                        <button
+                            class="map-layer-zoom"
+                            type="button"
+                            data-zoom-layer-id="habitat-praterie-mesiche"
+                            aria-label="Zoom sulle praterie mesiche"
+                            title="Zoom sul layer"
+                        >
+                            <span class="map-layer-zoom-icon" aria-hidden="true"></span>
+                        </button>
+
+                    </div>
+
+                    <!-- PRATERIE MESOFILE -->
+
+                    <div class="map-layer-row">
+
+                        <label class="map-layer-option">
+
+                            <input
+                                class="map-layer-input"
+                                type="checkbox"
+                                data-layer-id="habitat-praterie-mesofile"
+                            >
+
+                            <span
+                                class="map-layer-symbol"
+                                data-habitat-color="praterie-mesofile"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="map-layer-label">
+                                Praterie mesofile pascolate
+                            </span>
+
+                        </label>
+
+                        <button
+                            class="map-layer-zoom"
+                            type="button"
+                            data-zoom-layer-id="habitat-praterie-mesofile"
+                            aria-label="Zoom sulle praterie mesofile"
+                            title="Zoom sul layer"
+                        >
+                            <span class="map-layer-zoom-icon" aria-hidden="true"></span>
+                        </button>
+
+                    </div>
+
+                    <!-- PRATERIE XERICHE -->
+
+                    <div class="map-layer-row">
+
+                        <label class="map-layer-option">
+
+                            <input
+                                class="map-layer-input"
+                                type="checkbox"
+                                data-layer-id="habitat-praterie-xeriche"
+                            >
+
+                            <span
+                                class="map-layer-symbol"
+                                data-habitat-color="praterie-xeriche"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="map-layer-label">
+                                Praterie xeriche dell’Italia centrale e meridionale
+                            </span>
+
+                        </label>
+
+                        <button
+                            class="map-layer-zoom"
+                            type="button"
+                            data-zoom-layer-id="habitat-praterie-xeriche"
+                            aria-label="Zoom sulle praterie xeriche"
+                            title="Zoom sul layer"
+                        >
+                            <span class="map-layer-zoom-icon" aria-hidden="true"></span>
+                        </button>
+
+                    </div>
+
+                    <!-- QUERCETI -->
+
+                    <div class="map-layer-row">
+
+                        <label class="map-layer-option">
+
+                            <input
+                                class="map-layer-input"
+                                type="checkbox"
+                                data-layer-id="habitat-querceti"
+                            >
+
+                            <span
+                                class="map-layer-symbol"
+                                data-habitat-color="querceti"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="map-layer-label">
+                                Querceti temperati a cerro
+                            </span>
+
+                        </label>
+
+                        <button
+                            class="map-layer-zoom"
+                            type="button"
+                            data-zoom-layer-id="habitat-querceti"
+                            aria-label="Zoom sui querceti"
+                            title="Zoom sul layer"
+                        >
+                            <span class="map-layer-zoom-icon" aria-hidden="true"></span>
+                        </button>
+
+                    </div>
+
+                    <!-- ABETINE -->
+
+                    <div class="map-layer-row">
+
+                        <label class="map-layer-option">
+
+                            <input
+                                class="map-layer-input"
+                                type="checkbox"
+                                data-layer-id="habitat-abetine"
+                            >
+
+                            <span
+                                class="map-layer-symbol"
+                                data-habitat-color="abetine"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="map-layer-label">
+                                Abetine dell’Appennino centrale e meridionale
+                            </span>
+
+                        </label>
+
+                        <button
+                            class="map-layer-zoom"
+                            type="button"
+                            data-zoom-layer-id="habitat-abetine"
+                            aria-label="Zoom sulle abetine"
+                            title="Zoom sul layer"
+                        >
+                            <span class="map-layer-zoom-icon" aria-hidden="true"></span>
+                        </button>
+
+                    </div>
+
+                    <!-- OSTRYA -->
+
+                    <div class="map-layer-row">
+
+                        <label class="map-layer-option">
+
+                            <input
+                                class="map-layer-input"
+                                type="checkbox"
+                                data-layer-id="habitat-ostrya"
+                            >
+
+                            <span
+                                class="map-layer-symbol"
+                                data-habitat-color="ostrya"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="map-layer-label">
+                                Boschi di Ostrya carpinifolia
+                            </span>
+
+                        </label>
+
+                        <button
+                            class="map-layer-zoom"
+                            type="button"
+                            data-zoom-layer-id="habitat-ostrya"
+                            aria-label="Zoom sui boschi di Ostrya carpinifolia"
+                            title="Zoom sul layer"
+                        >
+                            <span class="map-layer-zoom-icon" aria-hidden="true"></span>
+                        </button>
+
+                    </div>
+
+                    <!-- PRATERIE DA SFALCIO -->
+
+                    <div class="map-layer-row">
+
+                        <label class="map-layer-option">
+
+                            <input
+                                class="map-layer-input"
+                                type="checkbox"
+                                data-layer-id="habitat-praterie-sfalcio"
+                            >
+
+                            <span
+                                class="map-layer-symbol"
+                                data-habitat-color="praterie-sfalcio"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="map-layer-label">
+                                Praterie da sfalcio planiziali, collinari e montane
+                            </span>
+
+                        </label>
+
+                        <button
+                            class="map-layer-zoom"
+                            type="button"
+                            data-zoom-layer-id="habitat-praterie-sfalcio"
+                            aria-label="Zoom sulle praterie da sfalcio"
+                            title="Zoom sul layer"
+                        >
+                            <span class="map-layer-zoom-icon" aria-hidden="true"></span>
+                        </button>
+
+                    </div>
+
+                    <!-- CESPUGLIETI -->
+
+                    <div class="map-layer-row">
+
+                        <label class="map-layer-option">
+
+                            <input
+                                class="map-layer-input"
+                                type="checkbox"
+                                data-layer-id="habitat-cespuglieti"
+                            >
+
+                            <span
+                                class="map-layer-symbol"
+                                data-habitat-color="cespuglieti"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="map-layer-label">
+                                Cespuglieti temperati a latifoglie decidue
+                            </span>
+
+                        </label>
+
+                        <button
+                            class="map-layer-zoom"
+                            type="button"
+                            data-zoom-layer-id="habitat-cespuglieti"
+                            aria-label="Zoom sui cespuglieti"
+                            title="Zoom sul layer"
+                        >
+                            <span class="map-layer-zoom-icon" aria-hidden="true"></span>
+                        </button>
+
+                    </div>
+
+                    <!-- GINEPRETI -->
+
+                    <div class="map-layer-row">
+
+                        <label class="map-layer-option">
+
+                            <input
+                                class="map-layer-input"
+                                type="checkbox"
+                                data-layer-id="habitat-ginepreti"
+                            >
+
+                            <span
+                                class="map-layer-symbol"
+                                data-habitat-color="ginepreti"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="map-layer-label">
+                                Ginepreti collinari e montani
+                            </span>
+
+                        </label>
+
+                        <button
+                            class="map-layer-zoom"
+                            type="button"
+                            data-zoom-layer-id="habitat-ginepreti"
+                            aria-label="Zoom sui ginepreti"
+                            title="Zoom sul layer"
+                        >
+                            <span class="map-layer-zoom-icon" aria-hidden="true"></span>
+                        </button>
+
+                    </div>
+
+                    <!-- CONIFERE ALLOCTONE -->
+
+                    <div class="map-layer-row">
+
+                        <label class="map-layer-option">
+
+                            <input
+                                class="map-layer-input"
+                                type="checkbox"
+                                data-layer-id="habitat-conifere-alloctone"
+                            >
+
+                            <span
+                                class="map-layer-symbol"
+                                data-habitat-color="conifere-alloctone"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="map-layer-label">
+                                Boschi di conifere alloctone o fuori dal loro areale
+                            </span>
+
+                        </label>
+
+                        <button
+                            class="map-layer-zoom"
+                            type="button"
+                            data-zoom-layer-id="habitat-conifere-alloctone"
+                            aria-label="Zoom sui boschi di conifere alloctone"
+                            title="Zoom sul layer"
+                        >
+                            <span class="map-layer-zoom-icon" aria-hidden="true"></span>
+                        </button>
+
+                    </div>
+
+                    <!-- PIOPPI -->
+
+                    <div class="map-layer-row">
+
+                        <label class="map-layer-option">
+
+                            <input
+                                class="map-layer-input"
+                                type="checkbox"
+                                data-layer-id="habitat-pioppi"
+                            >
+
+                            <span
+                                class="map-layer-symbol"
+                                data-habitat-color="pioppi"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="map-layer-label">
+                                Boschi ripariali a pioppi
+                            </span>
+
+                        </label>
+
+                        <button
+                            class="map-layer-zoom"
+                            type="button"
+                            data-zoom-layer-id="habitat-pioppi"
+                            aria-label="Zoom sui boschi ripariali a pioppi"
+                            title="Zoom sul layer"
+                        >
+                            <span class="map-layer-zoom-icon" aria-hidden="true"></span>
+                        </button>
+
+                    </div>
+
+                    <!-- SALICI -->
+
+                    <div class="map-layer-row">
+
+                        <label class="map-layer-option">
+
+                            <input
+                                class="map-layer-input"
+                                type="checkbox"
+                                data-layer-id="habitat-salici"
+                            >
+
+                            <span
+                                class="map-layer-symbol"
+                                data-habitat-color="salici"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="map-layer-label">
+                                Boschi ripariali temperati di salici
+                            </span>
+
+                        </label>
+
+                        <button
+                            class="map-layer-zoom"
+                            type="button"
+                            data-zoom-layer-id="habitat-salici"
+                            aria-label="Zoom sui boschi ripariali di salici"
+                            title="Zoom sul layer"
+                        >
+                            <span class="map-layer-zoom-icon" aria-hidden="true"></span>
+                        </button>
+
+                    </div>
+
+                    <!-- RUPI -->
+
+                    <div class="map-layer-row">
+
+                        <label class="map-layer-option">
+
+                            <input
+                                class="map-layer-input"
+                                type="checkbox"
+                                data-layer-id="habitat-rupi"
+                            >
+
+                            <span
+                                class="map-layer-symbol"
+                                data-habitat-color="rupi"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="map-layer-label">
+                                Rupi carbonatiche dei rilievi del Mediterraneo occidentale
+                            </span>
+
+                        </label>
+
+                        <button
+                            class="map-layer-zoom"
+                            type="button"
+                            data-zoom-layer-id="habitat-rupi"
+                            aria-label="Zoom sulle rupi carbonatiche"
+                            title="Zoom sul layer"
+                        >
+                            <span class="map-layer-zoom-icon" aria-hidden="true"></span>
+                        </button>
+
+                    </div>
+
+                    <!-- COLTURE -->
+
+                    <div class="map-layer-row">
+
+                        <label class="map-layer-option">
+
+                            <input
+                                class="map-layer-input"
+                                type="checkbox"
+                                data-layer-id="habitat-colture"
+                            >
+
+                            <span
+                                class="map-layer-symbol"
+                                data-habitat-color="colture"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="map-layer-label">
+                                Colture estensive
+                            </span>
+
+                        </label>
+
+                        <button
+                            class="map-layer-zoom"
+                            type="button"
+                            data-zoom-layer-id="habitat-colture"
+                            aria-label="Zoom sulle colture estensive"
+                            title="Zoom sul layer"
+                        >
+                            <span class="map-layer-zoom-icon" aria-hidden="true"></span>
+                        </button>
+
+                    </div>
+
+                    <!-- CENTRI ABITATI -->
+
+                    <div class="map-layer-row map-layer-row-secondary">
+
+                        <label class="map-layer-option">
+
+                            <input
+                                class="map-layer-input"
+                                type="checkbox"
+                                data-layer-id="habitat-centri-abitati"
+                            >
+
+                            <span
+                                class="map-layer-symbol"
+                                data-habitat-color="centri-abitati"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="map-layer-label">
+                                Centri abitati e infrastrutture viarie e ferroviarie
+                            </span>
+
+                        </label>
+
+                        <button
+                            class="map-layer-zoom"
+                            type="button"
+                            data-zoom-layer-id="habitat-centri-abitati"
+                            aria-label="Zoom sui centri abitati"
+                            title="Zoom sul layer"
+                        >
+                            <span class="map-layer-zoom-icon" aria-hidden="true"></span>
+                        </button>
+
+                    </div>
+
+                    <!-- SITI PRODUTTIVI -->
+
+                    <div class="map-layer-row map-layer-row-secondary">
+
+                        <label class="map-layer-option">
+
+                            <input
+                                class="map-layer-input"
+                                type="checkbox"
+                                data-layer-id="habitat-siti-produttivi"
+                            >
+
+                            <span
+                                class="map-layer-symbol"
+                                data-habitat-color="siti-produttivi"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="map-layer-label">
+                                Siti produttivi, commerciali e grandi nodi infrastrutturali
+                            </span>
+
+                        </label>
+
+                        <button
+                            class="map-layer-zoom"
+                            type="button"
+                            data-zoom-layer-id="habitat-siti-produttivi"
+                            aria-label="Zoom sui siti produttivi"
+                            title="Zoom sul layer"
+                        >
+                            <span class="map-layer-zoom-icon" aria-hidden="true"></span>
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </aside>
+
+    <!-- ======================================================
+         AREA CARTOGRAFICA PRINCIPALE
+    ======================================================= -->
+
+    <main
+        id="map-main-area"
+        class="map-main-area"
+    >
+
+        <div
+            id="map-primary"
+            class="map-primary"
+            aria-label="Mappa principale del territorio di Pescopennataro"
+        ></div>
+
+        <div
+            id="map-3d"
+            class="map-3d"
+            aria-label="Vista satellitare tridimensionale del territorio di Pescopennataro"
+            aria-hidden="true"
+            hidden
+        ></div>
+
+        <div
+            id="map-3d-toolbar"
+            class="map-3d-toolbar"
+            hidden
+        >
+            <span class="map-3d-toolbar-title">
+                Vista satellitare 3D
+            </span>
+
+            <div
+                class="map-3d-toolbar-controls"
+                role="group"
+                aria-label="Comandi della vista tridimensionale"
+            >
+                <button
+                    id="map-3d-tilt-down"
+                    class="map-3d-control"
+                    type="button"
+                    title="Riduci inclinazione"
+                    aria-label="Riduci inclinazione della vista 3D"
+                >
+                    −
+                </button>
+
+                <button
+                    id="map-3d-tilt-up"
+                    class="map-3d-control"
+                    type="button"
+                    title="Aumenta inclinazione"
+                    aria-label="Aumenta inclinazione della vista 3D"
+                >
+                    +
+                </button>
+
+                <button
+                    id="map-3d-reset"
+                    class="map-3d-control map-3d-control-wide"
+                    type="button"
+                    title="Ripristina la prospettiva 3D"
+                    aria-label="Ripristina inclinazione e orientamento della vista 3D"
+                >
+                    3D
+                </button>
+
+                <button
+                    id="map-3d-top"
+                    class="map-3d-control map-3d-control-wide"
+                    type="button"
+                    title="Vista dall’alto"
+                    aria-label="Imposta la vista dall’alto"
+                >
+                    Alto
+                </button>
+
+                <button
+                    id="map-3d-north"
+                    class="map-3d-control"
+                    type="button"
+                    title="Orienta la mappa verso nord"
+                    aria-label="Orienta la vista 3D verso nord"
+                >
+                    N
+                </button>
+            </div>
+
+            <button
+                id="map-3d-return"
+                class="map-3d-return"
+                type="button"
+                title="Torna alla vista satellitare 2D"
+                aria-label="Torna alla vista satellitare 2D"
+            >
+                2D
+            </button>
+        </div>
+
+        <div
+            id="map-status"
+            class="map-status"
+            role="status"
+            aria-live="polite"
+        >
+            Preparazione della cartografia...
+        </div>
+
+        <!-- ==================================================
+             INQUADRAMENTO TERRITORIALE FLOTTANTE
+        =================================================== -->
+
+        <section
+            id="map-overview-panel"
+            class="map-overview-panel"
+            aria-labelledby="map-overview-title"
+        >
+
+            <header class="map-overview-header">
+
+                <div>
+
+                    <h2
+                        id="map-overview-title"
+                        class="map-overview-title"
+                    >
+                        Navigatore territoriale
+                    </h2>
+
+                    <p class="map-overview-description">
+                        Comune di Pescopennataro
+                    </p>
+
+                </div>
+
+                <button
+                    id="map-overview-toggle"
+                    class="map-overview-toggle"
+                    type="button"
+                    aria-label="Riduci la mini mappa"
+                    aria-expanded="true"
+                    title="Riduci la mini mappa"
+                >
+                    <span aria-hidden="true">−</span>
+                </button>
+
+            </header>
+
+            <div
+                id="map-overview-content"
+                class="map-overview-content"
+            >
+
+                <div
+                    id="map-overview"
+                    class="map-overview"
+                    aria-label="Navigatore territoriale del Comune di Pescopennataro. Fare clic per ricentrare la mappa principale."
+                    title="Fare clic per ricentrare la mappa principale"
+                >
+                    <span
+                        class="map-overview-north"
+                        aria-label="Nord"
+                        title="Nord"
+                    >
+                        <span aria-hidden="true">▲</span>
+                        <strong>N</strong>
+                    </span>
+                </div>
+
+                <div class="map-overview-legend">
+
+                    <span class="map-overview-legend-item">
+
+                        <span
+                            class="map-overview-current-extent-symbol"
+                            aria-hidden="true"
+                        ></span>
+
+                        Area visualizzata nella mappa principale
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <div
+            id="map-scale-display"
+            class="map-scale-display"
+            aria-label="Scala della mappa"
+        ></div>
+
+    </main>
+
+
+
+    <!-- ======================================================
+         GALLERIA FOTOGRAFICA DELLA SPECIE
+    ======================================================= -->
+
+    <div
+        id="map-species-gallery-overlay"
+        class="map-species-gallery-overlay"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="map-species-gallery-title"
+        aria-hidden="true"
+        hidden
+    >
+        <div class="map-species-gallery-dialog">
+            <header class="map-species-gallery-header">
+                <div>
+                    <p class="map-species-gallery-kicker">Atlante fotografico</p>
+                    <h2 id="map-species-gallery-title" class="map-species-gallery-title">Galleria della specie</h2>
+                    <p id="map-species-gallery-summary" class="map-species-gallery-summary"></p>
+                </div>
+                <button id="map-species-gallery-close" class="map-species-gallery-close" type="button" aria-label="Chiudi la galleria fotografica" title="Chiudi">×</button>
+            </header>
+            <div id="map-species-gallery-content" class="map-species-gallery-content"></div>
+        </div>
+    </div>
+</section>

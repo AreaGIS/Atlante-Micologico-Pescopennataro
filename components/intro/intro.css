@@ -153,7 +153,7 @@
 
 .enti-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 20px;
 }
 
@@ -222,25 +222,46 @@
     pointer-events: none;
 }
 
-/* Logo Comune */
+/* ==========================================================
+   DIMENSIONAMENTO UNIFORME DEI LOGHI
+========================================================== */
+
+.ente-logo {
+    width: 100%;
+    height: 100%;
+    max-width: 240px;
+    max-height: 138px;
+
+    object-fit: contain;
+    object-position: center;
+}
+
+/* Logo Comune: formato verticale */
 
 .logo-comune {
-    width: 145px;
-    height: 145px;
+    max-width: 148px;
+    max-height: 148px;
 }
 
-/* Logo Università */
+/* Logo Università: formato orizzontale */
 
 .logo-unimol {
-    width: 245px;
+    max-width: 238px;
     max-height: 132px;
 }
 
-/* Logo PescoLab */
+/* Logo PescoLab: formato orizzontale compatto */
 
 .logo-pescolab {
-    width: 205px;
-    max-height: 132px;
+    max-width: 210px;
+    max-height: 118px;
+}
+
+/* Logo Associazione Micologica Bresadola: formato molto orizzontale */
+
+.logo-amb {
+    max-width: 235px;
+    max-height: 128px;
 }
 
 .ente-nome {
@@ -490,7 +511,7 @@
     }
 
     .enti-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .ente-logo-area {
@@ -541,23 +562,32 @@
         margin-top: 25px;
     }
 
+    .enti-grid {
+        grid-template-columns: 1fr;
+    }
+
     .ente-logo-area {
         height: 145px;
     }
 
     .logo-comune {
-        width: 115px;
-        height: 115px;
+        max-width: 115px;
+        max-height: 115px;
     }
 
     .logo-unimol {
-        width: 205px;
+        max-width: 205px;
         max-height: 105px;
     }
 
     .logo-pescolab {
-        width: 175px;
+        max-width: 175px;
         max-height: 105px;
+    }
+
+    .logo-amb {
+        max-width: 205px;
+        max-height: 112px;
     }
 
     .intro-pulsante {

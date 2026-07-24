@@ -1213,3 +1213,272 @@ body.info-modal-open {
         transition: none;
     }
 }
+
+/* ==========================================================
+   RELEASE 1.6 - RIFINITURA GRAFICA PAGINA INFO
+========================================================== */
+
+.info-modal {
+    width: min(980px, 100%);
+    padding: 20px 24px 22px;
+    border-color: rgba(42, 96, 70, 0.28);
+    border-radius: 18px;
+    background: #fffefa;
+}
+
+.info-page {
+    --info-green: #1f6548;
+    --info-green-dark: #174b36;
+    --info-green-soft: #edf6f1;
+    --info-gold: #bd8415;
+    --info-gold-soft: #fff6df;
+    --info-border: #dbe5de;
+}
+
+.info-close-button {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: rgba(247, 250, 248, 0.98);
+    color: #355d4c;
+}
+
+.info-hero {
+    padding: 2px 42px 18px;
+    border-bottom: 1px solid var(--info-border);
+}
+
+.info-logo-row {
+    gap: 28px;
+    margin-bottom: 8px;
+}
+
+.info-logo-link {
+    min-width: 112px;
+    min-height: 62px;
+    padding: 4px 8px;
+}
+
+.info-institutional-logo {
+    max-height: 64px;
+}
+
+.info-logo-comune { max-height: 66px; }
+.info-logo-unimol { max-width: 160px; max-height: 62px; }
+.info-logo-pescolab { max-width: 132px; max-height: 58px; }
+
+.info-kicker {
+    margin-bottom: 6px;
+    color: var(--info-green);
+    font-size: 10px;
+    letter-spacing: 0.17em;
+}
+
+.info-title {
+    color: #22211f;
+    font-size: clamp(28px, 3.4vw, 38px);
+    line-height: 1.08;
+}
+
+.info-subtitle {
+    max-width: 790px;
+    margin-top: 8px;
+    font-size: 12.5px;
+    line-height: 1.5;
+}
+
+.info-section {
+    padding: 13px 4px;
+    border-bottom-color: #e5ebe7;
+}
+
+.info-section-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 9px !important;
+    color: var(--info-green-dark) !important;
+    font-size: 16px !important;
+}
+
+.info-section-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--info-green-dark);
+    color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    box-shadow: 0 4px 10px rgba(23, 75, 54, 0.14);
+}
+
+.info-section-author .info-section-title {
+    color: #8b6111 !important;
+}
+
+.info-section-author .info-section-icon {
+    background: var(--info-gold);
+}
+
+.info-section p {
+    font-size: 12.2px;
+    line-height: 1.55;
+}
+
+.info-roles {
+    gap: 12px;
+}
+
+.info-role-card {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    align-items: center;
+    gap: 11px;
+    min-height: 66px;
+    padding: 11px 14px;
+    border-color: var(--info-border);
+    border-radius: 12px;
+    background: #fbfdfb;
+    box-shadow: 0 5px 14px rgba(29, 69, 50, 0.04);
+}
+
+.info-role-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--info-green-soft);
+    color: var(--info-green-dark);
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.info-role-copy {
+    min-width: 0;
+}
+
+.info-role-card strong {
+    display: block;
+    margin-bottom: 3px;
+    color: var(--info-green);
+    font-size: 9.8px;
+}
+
+.info-role-card span:not(.info-role-icon) {
+    font-size: 12.3px;
+}
+
+.info-institution-card {
+    padding: 11px 13px;
+    border-radius: 13px;
+}
+
+.info-institution-card-scientific {
+    background: linear-gradient(135deg, #f8fcfa 0%, #eaf5ef 100%);
+}
+
+.info-institution-card-author {
+    background: linear-gradient(135deg, #fffdf8 0%, #fff3d9 100%);
+}
+
+.info-person-list {
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.info-person-name {
+    min-height: 34px;
+    padding: 7px 12px;
+    border-radius: 9px;
+}
+
+.info-department-layout {
+    grid-template-columns: 150px minmax(0, 1fr);
+    gap: 18px;
+}
+
+.info-department-logo-link {
+    min-height: 118px;
+    border-radius: 11px;
+    box-shadow: none;
+}
+
+.info-department-logo {
+    height: 108px;
+    max-height: 108px;
+    transform: none;
+    filter: none;
+}
+
+.info-department-text strong {
+    font-size: 13.2px;
+    letter-spacing: 0.025em;
+}
+
+.info-department-text p {
+    font-size: 11.8px;
+}
+
+.info-source-note {
+    padding: 11px 14px;
+    border-left-width: 5px;
+    border-radius: 9px;
+    background: #eff7f2;
+}
+
+.info-tech-list {
+    gap: 7px;
+}
+
+.info-tech-list span {
+    min-height: 28px;
+    padding: 4px 10px;
+    border-color: #d5e1d9;
+    background: #f5faf7;
+    color: #365848;
+    font-size: 10.2px;
+}
+
+.info-section:nth-last-of-type(2) p {
+    padding: 10px 13px;
+    border-radius: 9px;
+    background: #f8fbf9;
+}
+
+.info-section-version {
+    margin-top: 3px;
+    padding-top: 14px;
+}
+
+.info-version-box {
+    padding: 12px 14px;
+    border-color: #cfddd4;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #f6faf7 0%, #eef5f0 100%);
+    text-align: center;
+}
+
+@media (max-width: 760px) {
+    .info-modal { padding: 18px 15px; }
+    .info-hero { padding: 3px 24px 14px; }
+    .info-logo-row { gap: 10px; }
+    .info-section-title { font-size: 15px !important; }
+    .info-role-card { grid-template-columns: 38px minmax(0, 1fr); }
+    .info-department-layout { grid-template-columns: 135px minmax(0, 1fr); }
+}
+
+@media (max-width: 520px) {
+    .info-logo-row { gap: 4px 8px; }
+    .info-role-card { grid-template-columns: 36px minmax(0, 1fr); }
+    .info-role-icon { width: 34px; height: 34px; }
+    .info-section-title { align-items: flex-start; }
+    .info-section-icon { margin-top: -2px; }
+    .info-department-layout { grid-template-columns: 1fr; }
+}

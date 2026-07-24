@@ -2730,3 +2730,104 @@ body.map-species-gallery-open {
         grid-template-columns: 1fr;
     }
 }
+
+/* ==========================================================
+   RESTYLING LEGGERO DEL PANNELLO LATERALE
+   VERSIONE 2.9 - RELEASE 1.9
+
+   - uniformita delle schede cartografiche;
+   - spaziature verticali piu regolari;
+   - maggiore coerenza tra controlli e pulsanti;
+   - nessuna modifica alla logica della mappa.
+========================================================== */
+
+/* Sezioni leggermente piu compatte e regolari */
+.map-control-section {
+    padding-block: 22px;
+}
+
+.map-control-section-header {
+    margin-bottom: 14px;
+}
+
+/* Schede della cartografia di base perfettamente uniformi */
+.map-basemap-option {
+    min-height: 74px;
+    padding: 11px 12px;
+}
+
+.map-basemap-icon {
+    width: 38px;
+    height: 38px;
+}
+
+.map-basemap-label {
+    justify-content: center;
+    min-height: 44px;
+}
+
+.map-basemap-label strong {
+    line-height: 1.2;
+}
+
+.map-basemap-label small {
+    display: flex;
+    align-items: flex-start;
+    min-height: 2.7em;
+    line-height: 1.35;
+}
+
+/* Coerenza dei pulsanti del filtro specie */
+.map-species-action {
+    min-height: 36px;
+    border-radius: 9px;
+}
+
+.map-species-select {
+    border-radius: 9px;
+}
+
+/* Coerenza dei controlli territoriali */
+.map-layer-option {
+    min-height: 44px;
+    border-radius: 9px;
+}
+
+.map-layer-zoom {
+    width: 36px;
+    height: 36px;
+}
+
+/* Migliore equilibrio tra titoli e testi di supporto */
+.map-control-section-description,
+.map-species-summary,
+.map-species-help,
+.map-habitat-selection-summary {
+    color: #6d7a71;
+}
+
+/* Piccola rifinitura delle ombre senza appesantire il pannello */
+.map-basemap-option:hover,
+.map-layer-zoom:hover,
+.map-habitat-bulk-action:hover:not(:disabled) {
+    box-shadow: 0 6px 16px rgba(31, 91, 57, 0.12);
+}
+
+/* Responsive: mantiene uniformi le tre schede anche su mobile */
+@media (max-width: 560px) {
+    .map-control-section {
+        padding-block: 19px;
+    }
+
+    .map-basemap-option {
+        min-height: 70px;
+    }
+
+    .map-basemap-label {
+        min-height: 42px;
+    }
+
+    .map-basemap-label small {
+        min-height: 2.7em;
+    }
+}

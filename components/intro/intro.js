@@ -1,282 +1,259 @@
 /* ==========================================================
    WEBGIS V6
    COMPONENTE : INTRO
-   VERSIONE   : 1.1
-   RELEASE    : 0.1
+   VERSIONE   : 1.4
+   RELEASE    : 0.4
    STATO      : IN TEST
 ========================================================== */
 
 const INTRO_COMPONENT_PATH = "./components/intro/intro.html";
 
+const PARTNER_CONTENT = {
+    pescolab: {
+        title: "PescoLab",
+        subtitle: "Associazione culturale per la valorizzazione del territorio",
+        logo: "loghi/PescoLab.png",
+        logoAlt: "PescoLab",
+        text: "PescoLab promuove iniziative culturali, ambientali e sociali dedicate alla conoscenza e alla valorizzazione del territorio, favorendo la partecipazione della comunità locale.",
+        status: "La sezione completa sarà disponibile prossimamente."
+    },
+    amb: {
+        title: "A.M.B.",
+        subtitle: "Gruppo Molisano «C. Linneo»",
+        logo: "loghi/AMB.png",
+        logoAlt: "Associazione Micologica Bresadola - Gruppo Molisano C. Linneo",
+        text: "Il Gruppo Molisano «C. Linneo» promuove lo studio e la divulgazione del patrimonio micologico attraverso attività associative, escursioni e iniziative scientifiche.",
+        status: "La sezione completa sarà disponibile prossimamente."
+    }
+};
+
 let introOverlay = null;
 let consultButton = null;
+let partnerModal = null;
+let partnerModalWindow = null;
+let partnerModalLogo = null;
+let partnerModalTitle = null;
+let partnerModalSubtitle = null;
+let partnerModalText = null;
+let partnerModalStatusText = null;
+let partnerButtons = [];
+let modalCloseButtons = [];
+let lastFocusedElement = null;
 let introInitialized = false;
 let introTransitionTimer = null;
 
-/* ==========================================================
-   INIZIALIZZAZIONE
-========================================================== */
-
 export async function initIntro() {
-
     if (introInitialized && introOverlay) {
         return;
     }
 
     try {
-
-        let existingOverlay =
-            document.getElementById("intro-overlay");
+        let existingOverlay = document.getElementById("intro-overlay");
 
         if (!existingOverlay) {
-
-            const response =
-                await fetch(INTRO_COMPONENT_PATH);
+            const response = await fetch(INTRO_COMPONENT_PATH);
 
             if (!response.ok) {
-
                 throw new Error(
                     `Impossibile caricare il componente Intro: ${response.status}`
                 );
             }
 
-            const introHTML =
-                await response.text();
-
-            existingOverlay =
-                document.createElement("section");
-
-            existingOverlay.id =
-                "intro-overlay";
-
-            existingOverlay.className =
-                "intro-overlay";
-
+            const introHTML = await response.text();
+            existingOverlay = document.createElement("section");
+            existingOverlay.id = "intro-overlay";
+            existingOverlay.className = "intro-overlay";
             existingOverlay.setAttribute(
                 "aria-label",
                 "Introduzione all'Atlante Micologico di Pescopennataro"
             );
-
-            existingOverlay.innerHTML =
-                introHTML;
-
-            document.body.appendChild(
-                existingOverlay
-            );
+            existingOverlay.innerHTML = introHTML;
+            document.body.appendChild(existingOverlay);
         }
 
-        introOverlay =
-            existingOverlay;
-
-        consultButton =
-            introOverlay.querySelector(
-                "#consulta-atlante"
-            );
+        introOverlay = existingOverlay;
+        consultButton = introOverlay.querySelector("#consulta-atlante");
+        partnerModal = introOverlay.querySelector("#partner-modal");
+        partnerModalWindow = introOverlay.querySelector(".partner-modal-finestra");
+        partnerModalLogo = introOverlay.querySelector("#partner-modal-logo");
+        partnerModalTitle = introOverlay.querySelector("#partner-modal-titolo");
+        partnerModalSubtitle = introOverlay.querySelector("#partner-modal-sottotitolo");
+        partnerModalText = introOverlay.querySelector("#partner-modal-testo");
+        partnerModalStatusText = introOverlay.querySelector("#partner-modal-stato-testo");
+        partnerButtons = Array.from(
+            introOverlay.querySelectorAll("[data-partner]")
+        );
+        modalCloseButtons = Array.from(
+            introOverlay.querySelectorAll("[data-modal-close]")
+        );
 
         if (!consultButton) {
-
             throw new Error(
                 "Il pulsante #consulta-atlante non è presente in intro.html."
             );
         }
 
+        if (
+            !partnerModal ||
+            !partnerModalWindow ||
+            !partnerModalLogo ||
+            !partnerModalTitle ||
+            !partnerModalSubtitle ||
+            !partnerModalText ||
+            !partnerModalStatusText
+        ) {
+            throw new Error(
+                "La struttura della modale partner non è completa in intro.html."
+            );
+        }
+
         configureIntro();
-
         introInitialized = true;
-
         showIntro();
 
     } catch (error) {
-
         introInitialized = false;
-
         console.error(
             "Errore durante l'inizializzazione del componente Intro:",
             error
         );
-
         throw error;
     }
 }
 
-/* ==========================================================
-   CONFIGURAZIONE
-========================================================== */
-
 function configureIntro() {
+    consultButton.removeEventListener("click", handleConsultButtonClick);
+    consultButton.addEventListener("click", handleConsultButtonClick);
 
-    consultButton.removeEventListener(
-        "click",
-        handleConsultButtonClick
-    );
+    partnerButtons.forEach((button) => {
+        button.removeEventListener("click", handlePartnerButtonClick);
+        button.addEventListener("click", handlePartnerButtonClick);
+    });
 
-    consultButton.addEventListener(
-        "click",
-        handleConsultButtonClick
-    );
+    modalCloseButtons.forEach((button) => {
+        button.removeEventListener("click", closePartnerModal);
+        button.addEventListener("click", closePartnerModal);
+    });
 
-    introOverlay.removeEventListener(
-        "keydown",
-        handleIntroKeyboard
-    );
-
-    introOverlay.addEventListener(
-        "keydown",
-        handleIntroKeyboard
-    );
+    introOverlay.removeEventListener("keydown", handleIntroKeyboard);
+    introOverlay.addEventListener("keydown", handleIntroKeyboard);
 }
 
-/* ==========================================================
-   APERTURA
-========================================================== */
-
 export function showIntro() {
-
     if (!introOverlay) {
-
-        console.warn(
-            "Il componente Intro non è ancora stato inizializzato."
-        );
-
+        console.warn("Il componente Intro non è ancora stato inizializzato.");
         return;
     }
 
     if (introTransitionTimer) {
-
-        window.clearTimeout(
-            introTransitionTimer
-        );
-
+        window.clearTimeout(introTransitionTimer);
         introTransitionTimer = null;
     }
 
-    if (consultButton) {
-        consultButton.disabled = false;
-    }
+    closePartnerModal(false);
+    consultButton.disabled = false;
+    introOverlay.classList.remove("intro-nascosta");
+    introOverlay.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
 
-    introOverlay.classList.remove(
-        "intro-nascosta"
-    );
-
-    introOverlay.setAttribute(
-        "aria-hidden",
-        "false"
-    );
-
-    document.body.style.overflow =
-        "hidden";
-
-    window.setTimeout(
-        () => {
-
-            if (consultButton) {
-
-                consultButton.focus({
-                    preventScroll: true
-                });
-            }
-
-        },
-        50
-    );
+    window.setTimeout(() => {
+        consultButton.focus({ preventScroll: true });
+    }, 50);
 }
 
-/* ==========================================================
-   PULSANTE CONSULTA L'ATLANTE
-========================================================== */
-
 function handleConsultButtonClick() {
-
     hideIntro();
 }
 
-/* ==========================================================
-   CHIUSURA
-========================================================== */
+function handlePartnerButtonClick(event) {
+    const partnerKey = event.currentTarget.dataset.partner;
+    openPartnerModal(partnerKey, event.currentTarget);
+}
+
+function openPartnerModal(partnerKey, triggerElement) {
+    const content = PARTNER_CONTENT[partnerKey];
+
+    if (!content) {
+        console.warn(`Contenuto partner non disponibile: ${partnerKey}`);
+        return;
+    }
+
+    lastFocusedElement = triggerElement || document.activeElement;
+    partnerModalLogo.src = content.logo;
+    partnerModalLogo.alt = content.logoAlt;
+    partnerModalLogo.dataset.partnerLogo = partnerKey;
+    partnerModalTitle.textContent = content.title;
+    partnerModalSubtitle.textContent = content.subtitle;
+    partnerModalText.textContent = content.text;
+    partnerModalStatusText.textContent = content.status;
+    partnerModal.classList.add("partner-modal-aperta");
+    partnerModal.setAttribute("aria-hidden", "false");
+
+    window.setTimeout(() => {
+        partnerModalWindow.focus({ preventScroll: true });
+    }, 30);
+}
+
+function closePartnerModal(restoreFocus = true) {
+    if (!partnerModal) {
+        return;
+    }
+
+    partnerModal.classList.remove("partner-modal-aperta");
+    partnerModal.setAttribute("aria-hidden", "true");
+
+    if (
+        restoreFocus &&
+        lastFocusedElement &&
+        typeof lastFocusedElement.focus === "function"
+    ) {
+        lastFocusedElement.focus({ preventScroll: true });
+    }
+}
 
 export function hideIntro() {
-
     if (!introOverlay) {
         return;
     }
 
-    if (consultButton) {
-        consultButton.disabled = true;
-    }
-
-    introOverlay.classList.add(
-        "intro-nascosta"
-    );
-
-    introOverlay.setAttribute(
-        "aria-hidden",
-        "true"
-    );
-
-    introTransitionTimer =
-        window.setTimeout(
-            completeIntro,
-            350
-        );
+    closePartnerModal(false);
+    consultButton.disabled = true;
+    introOverlay.classList.add("intro-nascosta");
+    introOverlay.setAttribute("aria-hidden", "true");
+    introTransitionTimer = window.setTimeout(completeIntro, 350);
 }
-
-/* ==========================================================
-   COMPLETAMENTO INTRO
-========================================================== */
 
 function completeIntro() {
-
     introTransitionTimer = null;
-
-    document.body.style.overflow =
-        "";
+    document.body.style.overflow = "";
 
     document.dispatchEvent(
-        new CustomEvent(
-            "webgis:intro-complete",
-            {
-                detail: {
-                    completed: true
-                }
-            }
-        )
+        new CustomEvent("webgis:intro-complete", {
+            detail: { completed: true }
+        })
     );
 }
 
-/* ==========================================================
-   TASTIERA
-========================================================== */
-
 function handleIntroKeyboard(event) {
+    const modalIsOpen = partnerModal.classList.contains("partner-modal-aperta");
 
-    if (
-        event.key === "Enter" &&
-        document.activeElement === consultButton
-    ) {
-
+    if (event.key === "Escape" && modalIsOpen) {
         event.preventDefault();
-
-        hideIntro();
-
+        closePartnerModal();
         return;
     }
 
     if (event.key === "Tab") {
-
-        keepFocusInsideIntro(
-            event
+        keepFocusInsideContainer(
+            event,
+            modalIsOpen ? partnerModalWindow : introOverlay
         );
     }
 }
 
-/* ==========================================================
-   BLOCCO DEL FOCUS
-========================================================== */
-
-function keepFocusInsideIntro(event) {
-
-    const focusableElements =
-        introOverlay.querySelectorAll(
+function keepFocusInsideContainer(event, container) {
+    const focusableElements = Array.from(
+        container.querySelectorAll(
             [
                 "a[href]",
                 "button:not([disabled])",
@@ -285,39 +262,24 @@ function keepFocusInsideIntro(event) {
                 'textarea:not([disabled])',
                 '[tabindex]:not([tabindex="-1"])'
             ].join(",")
-        );
+        )
+    ).filter((element) => element.offsetParent !== null);
 
     if (!focusableElements.length) {
         return;
     }
 
-    const firstFocusableElement =
-        focusableElements[0];
+    const firstFocusableElement = focusableElements[0];
+    const lastFocusableElement = focusableElements[focusableElements.length - 1];
 
-    const lastFocusableElement =
-        focusableElements[
-            focusableElements.length - 1
-        ];
-
-    if (
-        event.shiftKey &&
-        document.activeElement === firstFocusableElement
-    ) {
-
+    if (event.shiftKey && document.activeElement === firstFocusableElement) {
         event.preventDefault();
-
         lastFocusableElement.focus();
-
         return;
     }
 
-    if (
-        !event.shiftKey &&
-        document.activeElement === lastFocusableElement
-    ) {
-
+    if (!event.shiftKey && document.activeElement === lastFocusableElement) {
         event.preventDefault();
-
         firstFocusableElement.focus();
     }
 }

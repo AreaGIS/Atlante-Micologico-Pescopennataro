@@ -1,16 +1,29 @@
 /* ==========================================================
    ATLANTE MICOLOGICO
    MODULO ANALYTICS
-   VERSIONE : 3.0 DEBUG EDITION
+   VERSIONE : 3.1
    STATO    : IN TEST
+
+   INDICATORI DISPONIBILI:
+   - visualizzazioni totali: eventi page_view;
+   - sessioni: session_id distinti;
+   - visitatori distinti: visitor_id distinti.
+
+   Il visitor_id è anonimo, specifico per questo WebGIS
+   e viene conservato nel browser per un massimo di 13 mesi.
 ========================================================== */
+
+import {
+    createClient
+} from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+import {
+    ANALYTICS_CONFIG
+} from "./analytics.config.js";
 
 console.info(
     "[Analytics] Step 1 - Modulo analytics.js caricato."
 );
-
-let createClient = null;
-let ANALYTICS_CONFIG = null;
 
 /* ==========================================================
    COSTANTI
@@ -18,6 +31,12 @@ let ANALYTICS_CONFIG = null;
 
 const SESSION_STORAGE_KEY =
     "atlante_micologico_session_id";
+
+const VISITOR_STORAGE_KEY =
+    "atlante_micologico_visitor";
+
+const VISITOR_RETENTION_DAYS =
+    395;
 
 const MAX_EVENT_DATA_LENGTH =
     5000;
@@ -29,6 +48,7 @@ const MAX_EVENT_DATA_LENGTH =
 let analyticsInitialized = false;
 let supabaseClient = null;
 let sessionId = null;
+let visitorId = null;
 
 /* ==========================================================
    INIZIALIZZAZIONE
@@ -49,125 +69,92 @@ export async function initAnalytics() {
         return;
     }
 
-    try {
+    if (!ANALYTICS_CONFIG.enabled) {
 
-        const configModule =
-            await import(
-                "./analytics.config.js"
-            );
-
-        ANALYTICS_CONFIG =
-            configModule.ANALYTICS_CONFIG;
-
-        console.info(
-            "[Analytics] Step 3 - Configurazione caricata."
+        debugLog(
+            "Modulo Analytics disattivato dalla configurazione."
         );
 
-        if (!ANALYTICS_CONFIG.enabled) {
+        return;
+    }
 
-            debugLog(
-                "Modulo Analytics disattivato dalla configurazione."
-            );
+    console.info(
+        "[Analytics] Step 3 - Configurazione caricata."
+    );
 
-            return;
-        }
+    validateConfiguration();
 
-        validateConfiguration();
+    console.info(
+        "[Analytics] Step 4 - Configurazione validata."
+    );
 
-        console.info(
-            "[Analytics] Step 4 - Configurazione validata."
-        );
+    console.info(
+        "[Analytics] Step 5 - Libreria Supabase caricata."
+    );
 
-        const supabaseModule =
-            await import(
-                "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm"
-            );
+    sessionId =
+        getOrCreateSessionId();
 
-        createClient =
-            supabaseModule.createClient;
+    visitorId =
+        getOrCreateVisitorId();
 
-        if (typeof createClient !== "function") {
-            throw new Error(
-                "La funzione createClient non è disponibile nel modulo Supabase."
-            );
-        }
+    console.info(
+        "[Analytics] Step 6 - Identificativi anonimi disponibili."
+    );
 
-        console.info(
-            "[Analytics] Step 5 - Libreria Supabase caricata."
-        );
-
-        sessionId =
-            getOrCreateSessionId();
-
-        console.info(
-            "[Analytics] Step 6 - Identificativo sessione disponibile."
-        );
-
-        supabaseClient =
-            createClient(
-                ANALYTICS_CONFIG.supabaseUrl,
-                ANALYTICS_CONFIG.supabasePublishableKey,
-                {
-                    auth: {
-                        persistSession: false,
-                        autoRefreshToken: false,
-                        detectSessionInUrl: false
-                    }
+    supabaseClient =
+        createClient(
+            ANALYTICS_CONFIG.supabaseUrl,
+            ANALYTICS_CONFIG.supabasePublishableKey,
+            {
+                auth: {
+                    persistSession: false,
+                    autoRefreshToken: false,
+                    detectSessionInUrl: false
                 }
-            );
-
-        console.info(
-            "[Analytics] Step 7 - Client Supabase creato."
+            }
         );
 
-        configureAnalyticsEvents();
+    console.info(
+        "[Analytics] Step 7 - Client Supabase creato."
+    );
 
-        console.info(
-            "[Analytics] Step 8 - Eventi WebGIS collegati."
+    configureAnalyticsEvents();
+
+    console.info(
+        "[Analytics] Step 8 - Eventi WebGIS collegati."
+    );
+
+    analyticsInitialized = true;
+
+    const pageViewRegistered =
+        await trackEvent(
+            "page_view",
+            {
+                application:
+                    ANALYTICS_CONFIG.applicationName,
+
+                referrer_present:
+                    Boolean(document.referrer)
+            }
         );
 
-        analyticsInitialized = true;
-
-        const pageViewRegistered =
-            await trackEvent(
-                "page_view",
-                {
-                    application:
-                        ANALYTICS_CONFIG.applicationName,
-                    referrer_present:
-                        Boolean(document.referrer)
-                }
-            );
-
-        if (!pageViewRegistered) {
-            throw new Error(
-                "L'evento page_view non è stato registrato."
-            );
-        }
+    if (pageViewRegistered) {
 
         console.info(
             "[Analytics] Step 9 - page_view registrato."
         );
 
-        debugLog(
-            "Modulo Analytics inizializzato correttamente."
+    } else {
+
+        console.warn(
+            "[Analytics] Step 9 - page_view non registrato."
         );
-
-    } catch (error) {
-
-        analyticsInitialized = false;
-        supabaseClient = null;
-
-        console.error(
-            "[Analytics] Inizializzazione non riuscita:",
-            error
-        );
-
-        /*
-         * Analytics non deve mai impedire l'avvio del WebGIS.
-         * L'errore viene quindi registrato ma non rilanciato.
-         */
     }
+
+    debugLog(
+        "Modulo Analytics inizializzato correttamente."
+    );
 }
 
 /* ==========================================================
@@ -180,16 +167,10 @@ export async function trackEvent(
 ) {
 
     if (
-        !ANALYTICS_CONFIG ||
         !ANALYTICS_CONFIG.enabled ||
         !analyticsInitialized ||
         !supabaseClient
     ) {
-
-        console.warn(
-            `[Analytics] Evento non inviato perché il modulo non è pronto: ${eventName}`
-        );
-
         return false;
     }
 
@@ -211,6 +192,9 @@ export async function trackEvent(
     const payload = {
         session_id:
             sessionId,
+
+        visitor_id:
+            visitorId,
 
         event_name:
             normalizedEventName,
@@ -252,12 +236,12 @@ export async function trackEvent(
             )
     };
 
-    console.info(
-        `[Analytics] Invio evento: ${normalizedEventName}`,
-        payload
-    );
-
     try {
+
+        debugLog(
+            `Invio evento: ${normalizedEventName}`,
+            payload.event_data
+        );
 
         const {
             error
@@ -282,7 +266,7 @@ export async function trackEvent(
 
     } catch (error) {
 
-        console.error(
+        console.warn(
             `[Analytics] Impossibile registrare l'evento "${normalizedEventName}":`,
             error
         );
@@ -322,8 +306,7 @@ async function handleApplicationReady(
 ) {
 
     console.info(
-        "[Analytics] Evento WebGIS ricevuto: webgis:application-ready",
-        event.detail
+        "[Analytics] Evento WebGIS ricevuto: webgis:application-ready"
     );
 
     const registered =
@@ -342,6 +325,7 @@ async function handleApplicationReady(
         );
 
     if (registered) {
+
         console.info(
             "[Analytics] atlas_open registrato correttamente."
         );
@@ -355,11 +339,6 @@ async function handleApplicationReady(
 function handleBasemapChanged(
     event
 ) {
-
-    console.info(
-        "[Analytics] Evento WebGIS ricevuto: webgis:basemap-changed",
-        event.detail
-    );
 
     trackEvent(
         "map_interaction",
@@ -384,11 +363,6 @@ function handleLayerVisibilityChanged(
     event
 ) {
 
-    console.info(
-        "[Analytics] Evento WebGIS ricevuto: webgis:layer-visibility-changed",
-        event.detail
-    );
-
     trackEvent(
         "map_interaction",
         {
@@ -412,12 +386,6 @@ function handleLayerVisibilityChanged(
 ========================================================== */
 
 function validateConfiguration() {
-
-    if (!ANALYTICS_CONFIG) {
-        throw new Error(
-            "Oggetto ANALYTICS_CONFIG non disponibile."
-        );
-    }
 
     const url =
         ANALYTICS_CONFIG.supabaseUrl;
@@ -445,15 +413,6 @@ function validateConfiguration() {
 
         throw new Error(
             "Publishable key Supabase non configurata in analytics.config.js."
-        );
-    }
-
-    if (
-        typeof ANALYTICS_CONFIG.tableName !== "string" ||
-        !ANALYTICS_CONFIG.tableName.trim()
-    ) {
-        throw new Error(
-            "Nome tabella Analytics non valido."
         );
     }
 }
@@ -494,6 +453,81 @@ function getOrCreateSessionId() {
         return createUuid();
     }
 }
+
+/* ==========================================================
+   IDENTIFICATIVO ANONIMO DEL VISITATORE
+========================================================== */
+
+function getOrCreateVisitorId() {
+
+    const now =
+        Date.now();
+
+    const retentionMilliseconds =
+        VISITOR_RETENTION_DAYS *
+        24 *
+        60 *
+        60 *
+        1000;
+
+    try {
+
+        const storedValue =
+            window.localStorage.getItem(
+                VISITOR_STORAGE_KEY
+            );
+
+        if (storedValue) {
+
+            const storedVisitor =
+                JSON.parse(
+                    storedValue
+                );
+
+            if (
+                isUuid(storedVisitor?.id) &&
+                Number.isFinite(storedVisitor?.expiresAt) &&
+                storedVisitor.expiresAt > now
+            ) {
+
+                return storedVisitor.id;
+            }
+        }
+
+        const newVisitor = {
+            id:
+                createUuid(),
+
+            createdAt:
+                now,
+
+            expiresAt:
+                now + retentionMilliseconds
+        };
+
+        window.localStorage.setItem(
+            VISITOR_STORAGE_KEY,
+            JSON.stringify(
+                newVisitor
+            )
+        );
+
+        return newVisitor.id;
+
+    } catch (error) {
+
+        console.warn(
+            "[Analytics] localStorage non disponibile. Il visitatore sarà distinto soltanto nella sessione corrente.",
+            error
+        );
+
+        return sessionId || createUuid();
+    }
+}
+
+/* ==========================================================
+   GENERAZIONE UUID
+========================================================== */
 
 function createUuid() {
 
@@ -658,10 +692,7 @@ function debugLog(
     data = null
 ) {
 
-    if (
-        !ANALYTICS_CONFIG ||
-        !ANALYTICS_CONFIG.debug
-    ) {
+    if (!ANALYTICS_CONFIG.debug) {
         return;
     }
 

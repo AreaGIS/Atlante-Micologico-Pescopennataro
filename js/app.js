@@ -31,6 +31,10 @@ import {
     initInfo
 } from "./info.js";
 
+import {
+    initAnalytics
+} from "../analytics/analytics.js";
+
 /* ==========================================================
    STATO DELL'APPLICAZIONE
 ========================================================== */
@@ -54,6 +58,8 @@ document.addEventListener(
 async function startWebGIS() {
 
     try {
+
+        await initAnalytics();
 
         configureApplicationEvents();
 

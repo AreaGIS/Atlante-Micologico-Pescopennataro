@@ -1,17 +1,16 @@
 /* ==========================================================
    ATLANTE MICOLOGICO
    MODULO ANALYTICS
-   VERSIONE : 2.0
+   VERSIONE : 3.0 DEBUG EDITION
    STATO    : IN TEST
 ========================================================== */
 
-import {
-    createClient
-} from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+console.info(
+    "[Analytics] Step 1 - Modulo analytics.js caricato."
+);
 
-import {
-    ANALYTICS_CONFIG
-} from "./analytics.config.js";
+let createClient = null;
+let ANALYTICS_CONFIG = null;
 
 /* ==========================================================
    COSTANTI
@@ -37,6 +36,10 @@ let sessionId = null;
 
 export async function initAnalytics() {
 
+    console.info(
+        "[Analytics] Step 2 - initAnalytics() avviato."
+    );
+
     if (analyticsInitialized) {
 
         debugLog(
@@ -46,50 +49,125 @@ export async function initAnalytics() {
         return;
     }
 
-    if (!ANALYTICS_CONFIG.enabled) {
+    try {
+
+        const configModule =
+            await import(
+                "./analytics.config.js"
+            );
+
+        ANALYTICS_CONFIG =
+            configModule.ANALYTICS_CONFIG;
+
+        console.info(
+            "[Analytics] Step 3 - Configurazione caricata."
+        );
+
+        if (!ANALYTICS_CONFIG.enabled) {
+
+            debugLog(
+                "Modulo Analytics disattivato dalla configurazione."
+            );
+
+            return;
+        }
+
+        validateConfiguration();
+
+        console.info(
+            "[Analytics] Step 4 - Configurazione validata."
+        );
+
+        const supabaseModule =
+            await import(
+                "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm"
+            );
+
+        createClient =
+            supabaseModule.createClient;
+
+        if (typeof createClient !== "function") {
+            throw new Error(
+                "La funzione createClient non è disponibile nel modulo Supabase."
+            );
+        }
+
+        console.info(
+            "[Analytics] Step 5 - Libreria Supabase caricata."
+        );
+
+        sessionId =
+            getOrCreateSessionId();
+
+        console.info(
+            "[Analytics] Step 6 - Identificativo sessione disponibile."
+        );
+
+        supabaseClient =
+            createClient(
+                ANALYTICS_CONFIG.supabaseUrl,
+                ANALYTICS_CONFIG.supabasePublishableKey,
+                {
+                    auth: {
+                        persistSession: false,
+                        autoRefreshToken: false,
+                        detectSessionInUrl: false
+                    }
+                }
+            );
+
+        console.info(
+            "[Analytics] Step 7 - Client Supabase creato."
+        );
+
+        configureAnalyticsEvents();
+
+        console.info(
+            "[Analytics] Step 8 - Eventi WebGIS collegati."
+        );
+
+        analyticsInitialized = true;
+
+        const pageViewRegistered =
+            await trackEvent(
+                "page_view",
+                {
+                    application:
+                        ANALYTICS_CONFIG.applicationName,
+                    referrer_present:
+                        Boolean(document.referrer)
+                }
+            );
+
+        if (!pageViewRegistered) {
+            throw new Error(
+                "L'evento page_view non è stato registrato."
+            );
+        }
+
+        console.info(
+            "[Analytics] Step 9 - page_view registrato."
+        );
 
         debugLog(
-            "Modulo Analytics disattivato dalla configurazione."
+            "Modulo Analytics inizializzato correttamente."
         );
 
-        return;
+    } catch (error) {
+
+        analyticsInitialized = false;
+        supabaseClient = null;
+
+        console.error(
+            "[Analytics] Inizializzazione non riuscita:",
+            error
+        );
+
+        /*
+         * Analytics non deve mai impedire l'avvio del WebGIS.
+         * L'errore viene quindi registrato ma non rilanciato.
+         */
     }
-
-    validateConfiguration();
-
-    sessionId =
-        getOrCreateSessionId();
-
-    supabaseClient =
-        createClient(
-            ANALYTICS_CONFIG.supabaseUrl,
-            ANALYTICS_CONFIG.supabasePublishableKey,
-            {
-                auth: {
-                    persistSession: false,
-                    autoRefreshToken: false,
-                    detectSessionInUrl: false
-                }
-            }
-        );
-
-    configureAnalyticsEvents();
-
-    analyticsInitialized = true;
-
-    await trackEvent(
-        "page_view",
-        {
-            application:
-                ANALYTICS_CONFIG.applicationName,
-            referrer_present:
-                Boolean(document.referrer)
-        }
-    );
-
-    debugLog(
-        "Modulo Analytics inizializzato correttamente."
-    );
 }
 
 /* ==========================================================
@@ -102,10 +180,16 @@ export async function trackEvent(
 ) {
 
     if (
+        !ANALYTICS_CONFIG ||
         !ANALYTICS_CONFIG.enabled ||
         !analyticsInitialized ||
         !supabaseClient
     ) {
+
+        console.warn(
+            `[Analytics] Evento non inviato perché il modulo non è pronto: ${eventName}`
+        );
+
         return false;
     }
 
@@ -168,6 +252,11 @@ export async function trackEvent(
             )
     };
 
+    console.info(
+        `[Analytics] Invio evento: ${normalizedEventName}`,
+        payload
+    );
+
     try {
 
         const {
@@ -193,7 +282,7 @@ export async function trackEvent(
 
     } catch (error) {
 
-        console.warn(
+        console.error(
             `[Analytics] Impossibile registrare l'evento "${normalizedEventName}":`,
             error
         );
@@ -228,23 +317,35 @@ function configureAnalyticsEvents() {
    ATLANTE APERTO
 ========================================================== */
 
-function handleApplicationReady(
+async function handleApplicationReady(
     event
 ) {
 
-    trackEvent(
-        "atlas_open",
-        {
-            ready:
-                event.detail?.ready === true,
-
-            basemap:
-                normalizeText(
-                    event.detail?.basemap,
-                    100
-                ) || "satellite"
-        }
+    console.info(
+        "[Analytics] Evento WebGIS ricevuto: webgis:application-ready",
+        event.detail
     );
+
+    const registered =
+        await trackEvent(
+            "atlas_open",
+            {
+                ready:
+                    event.detail?.ready === true,
+
+                basemap:
+                    normalizeText(
+                        event.detail?.basemap,
+                        100
+                    ) || "satellite"
+            }
+        );
+
+    if (registered) {
+        console.info(
+            "[Analytics] atlas_open registrato correttamente."
+        );
+    }
 }
 
 /* ==========================================================
@@ -254,6 +355,11 @@ function handleApplicationReady(
 function handleBasemapChanged(
     event
 ) {
+
+    console.info(
+        "[Analytics] Evento WebGIS ricevuto: webgis:basemap-changed",
+        event.detail
+    );
 
     trackEvent(
         "map_interaction",
@@ -278,6 +384,11 @@ function handleLayerVisibilityChanged(
     event
 ) {
 
+    console.info(
+        "[Analytics] Evento WebGIS ricevuto: webgis:layer-visibility-changed",
+        event.detail
+    );
+
     trackEvent(
         "map_interaction",
         {
@@ -301,6 +412,12 @@ function handleLayerVisibilityChanged(
 ========================================================== */
 
 function validateConfiguration() {
+
+    if (!ANALYTICS_CONFIG) {
+        throw new Error(
+            "Oggetto ANALYTICS_CONFIG non disponibile."
+        );
+    }
 
     const url =
         ANALYTICS_CONFIG.supabaseUrl;
@@ -328,6 +445,15 @@ function validateConfiguration() {
 
         throw new Error(
             "Publishable key Supabase non configurata in analytics.config.js."
+        );
+    }
+
+    if (
+        typeof ANALYTICS_CONFIG.tableName !== "string" ||
+        !ANALYTICS_CONFIG.tableName.trim()
+    ) {
+        throw new Error(
+            "Nome tabella Analytics non valido."
         );
     }
 }
@@ -532,7 +658,10 @@ function debugLog(
     data = null
 ) {
 
-    if (!ANALYTICS_CONFIG.debug) {
+    if (
+        !ANALYTICS_CONFIG ||
+        !ANALYTICS_CONFIG.debug
+    ) {
         return;
     }
 

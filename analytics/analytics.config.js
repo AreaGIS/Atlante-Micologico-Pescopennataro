@@ -1,7 +1,7 @@
 /* ==========================================================
    ATLANTE MICOLOGICO
    CONFIGURAZIONE DEL MODULO ANALYTICS
-   VERSIONE : 1.0
+   VERSIONE : 3.0
    STATO    : IN TEST
 ========================================================== */
 
@@ -15,6 +15,11 @@ export const ANALYTICS_CONFIG = Object.freeze({
     supabaseUrl:
         "https://efhdvicazpqciwvnyjye.supabase.co",
 
+    /*
+     * Incollare qui la Publishable key già utilizzata
+     * nella versione funzionante locale.
+     * Non utilizzare mai la Secret key.
+     */
     supabasePublishableKey:
         "sb_publishable_WFZbNkM_kvSgsiF8idCSxw_AiPwDWvg",
 

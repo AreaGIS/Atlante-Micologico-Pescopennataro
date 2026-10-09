@@ -3626,7 +3626,7 @@ function getSurveySpeciesName(
     }
 
     return String(
-        feature.get("Specie") ||
+        feature.get("SPECIE FUNGINA") || feature.get("Specie") ||
         ""
     ).trim();
 }

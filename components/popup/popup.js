@@ -97,7 +97,7 @@ export function showPopup(feature) {
         ...feature.getProperties()
     };
 
-    const species = text(properties.Specie) || "Rilievo micologico";
+    const species = text(properties["SPECIE FUNGINA"] || properties.Specie) || "Rilievo micologico";
 
     popupTitle.textContent = species;
     popupSubtitle.textContent = getSubtitle(properties);
@@ -109,11 +109,11 @@ export function showPopup(feature) {
     }
 
     const publicFields = [];
-    pushField(publicFields, "Commestibilità", properties.Commestibilita, "edible.svg", "badge");
+    pushField(publicFields, "Commestibilità", properties["Commestibilità"] || properties.Commestibilita, "edible.svg", "badge");
     pushField(publicFields, "Habitat", properties.Habitat, "habitat.svg");
     pushField(publicFields, "Altitudine", formatAltitude(properties.Altitudine), "altitude.svg");
 
-    const coordinates = formatCoordinates(properties);
+    const coordinates = formatCoordinates(properties, feature);
     if (coordinates) {
         publicFields.push({
             label: "Coordinate",
@@ -450,7 +450,7 @@ function pushField(list, label, value, icon, type = "text") {
 ========================================================== */
 
 function getSubtitle(properties) {
-    const id = text(properties.ID || properties.fid);
+    const id = text(properties["ATLANTE Rilievo n."] || properties.ID || properties.fid);
     return id ? `Rilievo n. ${id}` : "";
 }
 
@@ -461,9 +461,26 @@ function formatAltitude(value) {
         : "";
 }
 
-function formatCoordinates(properties) {
-    const longitude = Number(properties.Longitudine);
-    const latitude = Number(properties.Latitudine);
+function formatCoordinates(properties, feature) {
+    const geometry = feature?.getGeometry?.();
+
+    const pointCoordinates =
+        geometry?.getType?.() === "Point"
+            ? geometry.getCoordinates()
+            : null;
+
+    const geographicCoordinates =
+        pointCoordinates && window.ol?.proj?.toLonLat
+            ? window.ol.proj.toLonLat(pointCoordinates)
+            : null;
+
+    const longitude = geographicCoordinates
+        ? geographicCoordinates[0]
+        : Number(properties.Longitudine);
+
+    const latitude = geographicCoordinates
+        ? geographicCoordinates[1]
+        : Number(properties.Latitudine);
 
     if (!Number.isFinite(longitude) || !Number.isFinite(latitude)) {
         return null;

@@ -85,6 +85,25 @@ const MAPTILER_SDK_STYLE_URL =
     `https://cdn.maptiler.com/maptiler-sdk-js/v${MAPTILER_SDK_VERSION}/maptiler-sdk.css`;
 
 /* ==========================================================
+   RETE NATURA 2000
+========================================================== */
+
+const NATURA2000_CONFIG = [
+    {
+        id: "natura2000-abeti-soprani",
+        name: "Abeti Soprani",
+        path: "./data/Abeti Soprani Pescopennataro.geojson",
+        color: "#FF00FF"
+    },
+    {
+        id: "natura2000-bosco-vallazzuna",
+        name: "Bosco Vallazzuna",
+        path: "./data/Bosco Vallazzuna.geojson",
+        color: "#39FF14"
+    }
+];
+
+/* ==========================================================
    CONFIGURAZIONE HABITAT
 ========================================================== */
 
@@ -93,103 +112,103 @@ const HABITAT_CONFIG = [
         id: "habitat-abetine",
         name: "Abetine dell’Appennino centrale e meridionale",
         path: "./data/Abetine dell’Appennino centrale e meridionale.geojson",
-        color: "#1f6b43"
+        color: "#00E5FF"
     },
     {
         id: "habitat-conifere-alloctone",
         name: "Boschi di conifere alloctone o fuori dal loro areale",
         path: "./data/Boschi di conifere alloctone o fuori dal loro areale.geojson",
-        color: "#3a8756"
+        color: "#00FFB3"
     },
     {
         id: "habitat-ostrya",
         name: "Boschi di Ostrya carpinifolia",
         path: "./data/Boschi di Ostrya carpinifolia.geojson",
-        color: "#7b5b38"
+        color: "#FF9F1C"
     },
     {
         id: "habitat-pioppi",
         name: "Boschi ripariali a pioppi",
         path: "./data/Boschi ripariali a pioppi.geojson",
-        color: "#5db4aa"
+        color: "#00BFFF"
     },
     {
         id: "habitat-salici",
         name: "Boschi ripariali temperati di salici",
         path: "./data/Boschi ripariali temperati di salici.geojson",
-        color: "#70c6ba"
+        color: "#00FFD5"
     },
     {
         id: "habitat-centri-abitati",
         name: "Centri abitati e infrastrutture viarie e ferroviarie",
         path: "./data/Centri abitati e infrastrutture viarie e ferroviarie.geojson",
-        color: "#bb6e6e"
+        color: "#FF5577"
     },
     {
         id: "habitat-cespuglieti",
         name: "Cespuglieti temperati a latifoglie decidue dei suoli ricchi",
         path: "./data/Cespuglieti temperati a latifoglie decidue dei suoli ricchi.geojson",
-        color: "#8b9f4c"
+        color: "#B6FF00"
     },
     {
         id: "habitat-colture",
         name: "Colture estensive",
         path: "./data/Colture estensive.geojson",
-        color: "#d4b44d"
+        color: "#FFE600"
     },
     {
         id: "habitat-faggete",
         name: "Faggete dell'Italia meridionale",
         path: "./data/Faggete dell'Italia meridionale.geojson",
-        color: "#2f7f4e"
+        color: "#00FF80"
     },
     {
         id: "habitat-ginepreti",
         name: "Ginepreti collinari e montani",
         path: "./data/Ginepreti collinari e montani.geojson",
-        color: "#63875d"
+        color: "#B366FF"
     },
     {
         id: "habitat-praterie-sfalcio",
         name: "Praterie da sfalcio planiziali, collinari e montane",
         path: "./data/Praterie da sfalcio planiziali, collinari e montane.geojson",
-        color: "#d7df71"
+        color: "#F5FF3B"
     },
     {
         id: "habitat-praterie-mesiche",
         name: "Praterie mesiche temperate e supramediterranee",
         path: "./data/Praterie mesiche temperate e supramediterranee.geojson",
-        color: "#c9d861"
+        color: "#FFEF00"
     },
     {
         id: "habitat-praterie-mesofile",
         name: "Praterie mesofile pascolate",
         path: "./data/Praterie mesofile pascolate.geojson",
-        color: "#b7cd55"
+        color: "#FFD000"
     },
     {
         id: "habitat-praterie-xeriche",
         name: "Praterie xeriche dell'Italia centrale e meridionale",
         path: "./data/Praterie xeriche dell'Italia centrale e meridionale.geojson",
-        color: "#ddbf5a"
+        color: "#FF7A00"
     },
     {
         id: "habitat-querceti",
         name: "Querceti temperati a cerro",
         path: "./data/Querceti temperati a cerro.geojson",
-        color: "#5d713b"
+        color: "#7CFF00"
     },
     {
         id: "habitat-rupi",
         name: "Rupi carbonatiche dei rilievi del Mediterraneo occidentale",
         path: "./data/Rupi carbonatiche dei rilievi del Mediterraneo occidentale.geojson",
-        color: "#a59c91"
+        color: "#FF70D2"
     },
     {
         id: "habitat-siti-produttivi",
         name: "Siti produttivi, commerciali e grandi nodi infrastrutturali",
         path: "./data/Siti produttivi, commerciali e grandi nodi infrastrutturali.geojson",
-        color: "#8e8e98"
+        color: "#FF4268"
     }
 ];
 
@@ -275,6 +294,9 @@ let speciesFilterReady =
 let habitatLayers =
     new Map();
 
+let natura2000Layers =
+    new Map();
+
 let currentBasemap =
     "satellite";
 
@@ -313,6 +335,12 @@ let sidebarToggle =
     null;
 
 let habitatToggle =
+    null;
+
+let natura2000Toggle =
+    null;
+
+let natura2000List =
     null;
 
 let habitatList =
@@ -441,6 +469,8 @@ export async function initMap() {
     createOverviewLayers();
 
     createHabitatLayers();
+
+    createNatura2000Layers();
 
     createMaps();
 
@@ -770,6 +800,16 @@ function cacheInterfaceElements() {
             "map-sidebar-toggle"
         );
 
+    natura2000Toggle =
+        document.getElementById(
+            "map-natura2000-toggle"
+        );
+
+    natura2000List =
+        document.getElementById(
+            "map-natura2000-list"
+        );
+
     habitatToggle =
         document.getElementById(
             "map-habitat-toggle"
@@ -942,6 +982,14 @@ function validateInterfaceElements() {
         [
             sidebarToggle,
             "#map-sidebar-toggle"
+        ],
+        [
+            natura2000Toggle,
+            "#map-natura2000-toggle"
+        ],
+        [
+            natura2000List,
+            "#map-natura2000-list"
         ],
         [
             habitatToggle,
@@ -1340,7 +1388,7 @@ function createHabitatLayers() {
                 new ol.layer.Vector({
                     source,
                     visible: false,
-                    opacity: 0.58,
+                    opacity: 1,
                     zIndex:
                         10 + index,
                     style:
@@ -1354,7 +1402,7 @@ function createHabitatLayers() {
                 new ol.layer.Vector({
                     source,
                     visible: false,
-                    opacity: 0.58,
+                    opacity: 1,
                     zIndex:
                         10 + index,
                     style:
@@ -1376,6 +1424,40 @@ function createHabitatLayers() {
             );
         }
     );
+}
+
+/* ==========================================================
+   LAYER NATURA 2000
+========================================================== */
+
+function createNatura2000Layers() {
+    NATURA2000_CONFIG.forEach((site, index) => {
+        const source = new ol.source.Vector({
+            url: site.path,
+            format: new ol.format.GeoJSON()
+        });
+
+        const primaryLayer = new ol.layer.Vector({
+            source,
+            visible: false,
+            zIndex: 50 + index,
+            style: createNatura2000Style(site.color, false)
+        });
+
+        const overviewLayer = new ol.layer.Vector({
+            source,
+            visible: false,
+            zIndex: 50 + index,
+            style: createNatura2000Style(site.color, true)
+        });
+
+        natura2000Layers.set(site.id, {
+            config: site,
+            source,
+            primaryLayer,
+            overviewLayer
+        });
+    });
 }
 
 /* ==========================================================
@@ -1855,6 +1937,7 @@ function getPrimaryLayerList() {
             item =>
                 item.primaryLayer
         ),
+        ...Array.from(natura2000Layers.values()).map(item => item.primaryLayer),
         primaryBoundaryLayer,
         primarySurveysLayer
     ];
@@ -1872,6 +1955,7 @@ function getOverviewLayerList() {
             item =>
                 item.overviewLayer
         ),
+        ...Array.from(natura2000Layers.values()).map(item => item.overviewLayer),
         overviewBoundaryLayer,
         overviewSurveysLayer
     ];
@@ -2057,8 +2141,8 @@ function createHabitatStyle(
                     hexToRgba(
                         color,
                         overview
-                            ? 0.42
-                            : 0.48
+                            ? 0.10
+                            : 0.10
                     )
             }),
         stroke:
@@ -2067,9 +2151,21 @@ function createHabitatStyle(
                     color,
                 width:
                     overview
-                        ? 0.8
-                        : 1.3
+                        ? 1.5
+                        : 2
             })
+    });
+}
+
+function createNatura2000Style(color, overview) {
+    return new ol.style.Style({
+        fill: new ol.style.Fill({
+            color: hexToRgba(color, 0.10)
+        }),
+        stroke: new ol.style.Stroke({
+            color,
+            width: overview ? 1.8 : 2.5
+        })
     });
 }
 
@@ -2242,6 +2338,11 @@ function configureInterfaceEvents() {
         toggleSidebar
     );
 
+    natura2000Toggle.addEventListener(
+        "click",
+        toggleNatura2000List
+    );
+
     habitatToggle.addEventListener(
         "click",
         toggleHabitatList
@@ -2403,6 +2504,20 @@ function toggleSidebar() {
         resizeMaps,
         320
     );
+}
+
+function toggleNatura2000List() {
+    const collapsed = natura2000List.classList.toggle(
+        "map-natura2000-list-collapsed"
+    );
+
+    natura2000Toggle.setAttribute(
+        "aria-expanded",
+        String(!collapsed)
+    );
+
+    natura2000Toggle.querySelector("span").textContent =
+        collapsed ? "+" : "−";
 }
 
 function toggleHabitatList() {
@@ -2695,6 +2810,10 @@ function handleLayerVisibilityChange(
 
         updateSpeciesFilterInterface();
 
+    } else if (natura2000Layers.has(layerId)) {
+        const site = natura2000Layers.get(layerId);
+        site.primaryLayer.setVisible(visible);
+        site.overviewLayer.setVisible(visible);
     } else {
 
         const habitat =
@@ -2913,6 +3032,11 @@ function getLayerSourceById(
         "surveys"
     ) {
         return surveysSource;
+    }
+
+    const natura2000 = natura2000Layers.get(layerId);
+    if (natura2000) {
+        return natura2000.source;
     }
 
     const habitat =
@@ -5400,7 +5524,7 @@ function add3DOperationalLayers() {
                     "fill-color":
                         habitat.color,
                     "fill-opacity":
-                        0.43
+                        0.10
                 }
             });
 
@@ -5419,11 +5543,43 @@ function add3DOperationalLayers() {
                     "line-color":
                         habitat.color,
                     "line-width":
-                        1.1
+                        2
                 }
             });
         }
     );
+
+    NATURA2000_CONFIG.forEach(site => {
+        const sourceId = `${site.id}-3d-source`;
+        add3DGeoJsonSource(sourceId, site.path);
+
+        add3DLayerSafely({
+            id: `${site.id}-3d-fill`,
+            type: "fill",
+            source: sourceId,
+            layout: { visibility: "none" },
+            paint: {
+                "fill-color": site.color,
+                "fill-opacity": 0.10
+            }
+        });
+
+        add3DLayerSafely({
+            id: `${site.id}-3d-line`,
+            type: "line",
+            source: sourceId,
+            layout: { visibility: "none" },
+            paint: {
+                "line-color": site.color,
+                "line-width": 2.5
+            }
+        });
+    });
+
+    // I rilievi micologici devono rimanere sopra i poligoni.
+    if (map3D.getLayer("webgis-surveys-points-3d")) {
+        map3D.moveLayer("webgis-surveys-points-3d");
+    }
 
     applySpeciesFilterTo3D();
 }
@@ -5509,6 +5665,11 @@ function set3DLayerVisibility(
     } else if (layerId === "surveys") {
         layerIds = [
             "webgis-surveys-points-3d"
+        ];
+    } else if (natura2000Layers.has(layerId)) {
+        layerIds = [
+            `${layerId}-3d-fill`,
+            `${layerId}-3d-line`
         ];
     } else if (
         habitatLayers.has(

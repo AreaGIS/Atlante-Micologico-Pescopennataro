@@ -166,7 +166,7 @@
 
                     <label
                         class="map-basemap-option"
-                        for="basemap-3d"
+                        for="basemap-3d" hidden
                     >
 
                         <input
@@ -412,6 +412,67 @@
 
                 </div>
 
+            </section>
+
+            <!-- ==================================================
+                 RETE NATURA 2000
+            =================================================== -->
+
+            <section
+                class="map-control-section map-natura2000-section"
+                aria-labelledby="map-natura2000-title"
+            >
+                <header class="map-control-section-header">
+                    <div>
+                        <h2 id="map-natura2000-title" class="map-control-section-title">
+                            Natura 2000
+                        </h2>
+                        <p class="map-control-section-description">
+                            Siti della Rete Natura 2000 nel territorio di Pescopennataro.
+                        </p>
+                    </div>
+                    <button
+                        id="map-natura2000-toggle"
+                        class="map-section-toggle"
+                        type="button"
+                        aria-label="Mostra o nascondi i siti Natura 2000"
+                        aria-controls="map-natura2000-list"
+                        aria-expanded="true"
+                    >
+                        <span aria-hidden="true">−</span>
+                    </button>
+                </header>
+
+                <div id="map-natura2000-list" class="map-natura2000-list">
+                    <div class="map-layer-row">
+                        <label class="map-layer-option">
+                            <input class="map-layer-input" type="checkbox"
+                                data-layer-id="natura2000-abeti-soprani">
+                            <span class="map-layer-symbol map-natura2000-symbol"
+                                data-natura2000-color="abeti-soprani" aria-hidden="true"></span>
+                            <span class="map-layer-label">Abeti Soprani</span>
+                        </label>
+                        <button class="map-layer-zoom" type="button"
+                            data-zoom-layer-id="natura2000-abeti-soprani"
+                            aria-label="Zoom su Abeti Soprani" title="Zoom su Abeti Soprani">
+                            <span class="map-layer-zoom-icon" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <div class="map-layer-row">
+                        <label class="map-layer-option">
+                            <input class="map-layer-input" type="checkbox"
+                                data-layer-id="natura2000-bosco-vallazzuna">
+                            <span class="map-layer-symbol map-natura2000-symbol"
+                                data-natura2000-color="bosco-vallazzuna" aria-hidden="true"></span>
+                            <span class="map-layer-label">Bosco Vallazzuna</span>
+                        </label>
+                        <button class="map-layer-zoom" type="button"
+                            data-zoom-layer-id="natura2000-bosco-vallazzuna"
+                            aria-label="Zoom su Bosco Vallazzuna" title="Zoom su Bosco Vallazzuna">
+                            <span class="map-layer-zoom-icon" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
             </section>
 
             <!-- ==================================================

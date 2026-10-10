@@ -1184,75 +1184,99 @@
 }
 
 /* ==========================================================
+   NATURA 2000 - LEGENDA E SEZIONE
+========================================================== */
+
+.map-natura2000-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.map-natura2000-list.map-natura2000-list-collapsed {
+    display: none;
+}
+
+.map-natura2000-symbol[data-natura2000-color="abeti-soprani"] {
+    background: rgba(255, 0, 255, 0.10);
+    border: 2px solid #FF00FF;
+}
+
+.map-natura2000-symbol[data-natura2000-color="bosco-vallazzuna"] {
+    background: rgba(57, 255, 20, 0.10);
+    border: 2px solid #39FF14;
+}
+
+/* ==========================================================
    COLORI HABITAT
 ========================================================== */
 
 .map-layer-symbol[data-habitat-color="abetine"] {
-    background: #1f6b43;
+    background: #00E5FF;
 }
 
 .map-layer-symbol[data-habitat-color="conifere-alloctone"] {
-    background: #3a8756;
+    background: #00FFB3;
 }
 
 .map-layer-symbol[data-habitat-color="ostrya"] {
-    background: #7b5b38;
+    background: #FF9F1C;
 }
 
 .map-layer-symbol[data-habitat-color="pioppi"] {
-    background: #5db4aa;
+    background: #00BFFF;
 }
 
 .map-layer-symbol[data-habitat-color="salici"] {
-    background: #70c6ba;
+    background: #00FFD5;
 }
 
 .map-layer-symbol[data-habitat-color="centri-abitati"] {
-    background: #bb6e6e;
+    background: #FF5577;
 }
 
 .map-layer-symbol[data-habitat-color="cespuglieti"] {
-    background: #8b9f4c;
+    background: #B6FF00;
 }
 
 .map-layer-symbol[data-habitat-color="colture"] {
-    background: #d4b44d;
+    background: #FFE600;
 }
 
 .map-layer-symbol[data-habitat-color="faggete"] {
-    background: #2f7f4e;
+    background: #00FF80;
 }
 
 .map-layer-symbol[data-habitat-color="ginepreti"] {
-    background: #63875d;
+    background: #B366FF;
 }
 
 .map-layer-symbol[data-habitat-color="praterie-sfalcio"] {
-    background: #d7df71;
+    background: #F5FF3B;
 }
 
 .map-layer-symbol[data-habitat-color="praterie-mesiche"] {
-    background: #c9d861;
+    background: #FFEF00;
 }
 
 .map-layer-symbol[data-habitat-color="praterie-mesofile"] {
-    background: #b7cd55;
+    background: #FFD000;
 }
 
 .map-layer-symbol[data-habitat-color="praterie-xeriche"] {
-    background: #ddbf5a;
+    background: #FF7A00;
 }
 
 .map-layer-symbol[data-habitat-color="querceti"] {
-    background: #5d713b;
+    background: #7CFF00;
 }
 
 .map-layer-symbol[data-habitat-color="rupi"] {
-    background: #a59c91;
+    background: #FF70D2;
 }
 
 .map-layer-symbol[data-habitat-color="siti-produttivi"] {
-    background: #8e8e98;
+    background: #FF4268;
 }
 
 /* ==========================================================
@@ -2830,4 +2854,9 @@ body.map-species-gallery-open {
     .map-basemap-label small {
         min-height: 2.7em;
     }
+}
+
+/* Satellite 3D temporaneamente disattivato */
+.map-basemap-option[for="basemap-3d"] {
+    display: none !important;
 }

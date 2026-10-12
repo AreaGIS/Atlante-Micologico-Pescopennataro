@@ -20,10 +20,24 @@ const PARTNER_CONTENT = {
     amb: {
         title: "A.M.B.",
         subtitle: "Gruppo Molisano «C. Linneo»",
-        logo: "loghi/AMB.png",
-        logoAlt: "Associazione Micologica Bresadola - Gruppo Molisano C. Linneo",
-        text: "Il Gruppo Molisano «C. Linneo» promuove lo studio e la divulgazione del patrimonio micologico attraverso attività associative, escursioni e iniziative scientifiche.",
-        status: "La sezione completa sarà disponibile prossimamente."
+        logo: "immagini/AMB.png",
+        logoAlt: "Logo dell’Associazione Micologica Bresadola - Gruppo Molisano C. Linneo",
+        text: "Il Gruppo Molisano «C. Linneo» dell’Associazione Micologica Bresadola è un’Associazione di Promozione Sociale ed Ente del Terzo Settore (APS – ETS). Promuove la conoscenza dei funghi e la tutela degli ecosistemi naturali attraverso attività scientifiche, educative e divulgative, senza finalità di lucro.",
+        activities: [
+            "Promuovere una cultura ecologica e comportamenti orientati alla tutela e al miglioramento degli ecosistemi naturali.",
+            "Promuovere lo studio dei funghi e delle problematiche micologiche mediante corsi, mostre, escursioni e altre iniziative.",
+            "Promuovere il miglioramento della normativa sulla raccolta e sullo studio dei funghi, con attenzione alla tutela ambientale e alla ricerca scientifica.",
+            "Raccogliere e diffondere materiale didattico, bibliografico e scientifico sulla micologia e sulle discipline affini, anche tramite pubblicazioni.",
+            "Collaborare con enti, istituzioni e associazioni che perseguono finalità analoghe.",
+            "Promuovere l’educazione sanitaria in ambito micologico.",
+            "Diffondere la consapevolezza ecologica e micologica tra i giovani e nelle scuole."
+        ],
+        coordinators: "Franco Cariglia (Registro nazionale micologi n. 1162), Giuseppe Giannotti (n. 1175) e Luca Trentanove (n. 1538).",
+        offices: [
+            "Via XX Settembre, 110 – 86041 Bonefro (CB)",
+            "c/o Dipartimento A.A.A., Facoltà di Agraria, Via De Sanctis – Campobasso"
+        ],
+        status: ""
     }
 };
 
@@ -184,14 +198,51 @@ function openPartnerModal(partnerKey, triggerElement) {
     partnerModalLogo.dataset.partnerLogo = partnerKey;
     partnerModalTitle.textContent = content.title;
     partnerModalSubtitle.textContent = content.subtitle;
-    partnerModalText.textContent = content.text;
-    partnerModalStatusText.textContent = content.status;
+    partnerModalText.replaceChildren();
+    partnerModalText.classList.toggle("partner-modal-testo-amb", partnerKey === "amb");
+
+    if (partnerKey === "amb") {
+        buildAmbContent(partnerModalText, content);
+    } else {
+        partnerModalText.textContent = content.text;
+    }
+
+    partnerModalStatusText.textContent = content.status || "";
+    partnerModalStatusText.hidden = !content.status;
+    partnerModalWindow.scrollTop = 0;
     partnerModal.classList.add("partner-modal-aperta");
     partnerModal.setAttribute("aria-hidden", "false");
 
     window.setTimeout(() => {
         partnerModalWindow.focus({ preventScroll: true });
     }, 30);
+}
+
+function buildAmbContent(container, content) {
+    const introduction = document.createElement("p");
+    introduction.className = "partner-amb-introduzione";
+    introduction.textContent = content.text;
+    container.appendChild(introduction);
+
+    const appendSection = (heading, values, ordered = false) => {
+        const section = document.createElement("section");
+        section.className = "partner-amb-sezione";
+        const title = document.createElement("h3");
+        title.textContent = heading;
+        section.appendChild(title);
+        const list = document.createElement(ordered ? "ol" : "ul");
+        values.forEach(value => {
+            const item = document.createElement("li");
+            item.textContent = value;
+            list.appendChild(item);
+        });
+        section.appendChild(list);
+        container.appendChild(section);
+    };
+
+    appendSection("Attività e finalità", content.activities);
+    appendSection("Coordinamento scientifico", [content.coordinators]);
+    appendSection("Sedi", content.offices);
 }
 
 function closePartnerModal(restoreFocus = true) {

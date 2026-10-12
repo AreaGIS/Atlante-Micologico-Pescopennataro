@@ -1130,3 +1130,50 @@ button.ente-box {
         transition: none;
     }
 }
+
+/* Scheda A.M.B.: contenuti istituzionali strutturati, senza alterare PescoLab. */
+.partner-modal-finestra:has(.partner-modal-testo-amb) {
+    width: min(680px, 100%);
+}
+
+.partner-modal-testo-amb {
+    max-width: 570px;
+    text-align: left;
+    font-style: normal;
+}
+
+.partner-amb-introduzione {
+    margin: 0 0 18px;
+}
+
+.partner-amb-sezione {
+    margin-top: 18px;
+}
+
+.partner-amb-sezione h3 {
+    margin: 0 0 9px;
+    color: #174b32;
+    font-size: 1.06rem;
+    line-height: 1.35;
+}
+
+.partner-amb-sezione ul {
+    margin: 0;
+    padding-left: 1.3rem;
+}
+
+.partner-amb-sezione li {
+    margin-bottom: 8px;
+    padding-left: 2px;
+}
+
+.partner-modal-stato[hidden] {
+    display: none !important;
+}
+
+@media (max-width: 560px) {
+    .partner-modal-testo-amb {
+        font-size: 0.92rem;
+        line-height: 1.55;
+    }
+}
